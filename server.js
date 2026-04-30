@@ -256,6 +256,14 @@ function existingPublishScopes() {
 
 function autoPublishSourceChanges() {
   const publishScopes = existingPublishScopes();
+  if (!publishScopes.length) {
+    return {
+      published: false,
+      skipped: true,
+      reason: "No se encontraron carpetas o archivos fuente configurados para publicar."
+    };
+  }
+
   stagePublishableSources();
 
   const stagedSources = listPreStagedFiles().filter(isPublishableSourcePath);
@@ -263,7 +271,7 @@ function autoPublishSourceChanges() {
     return {
       published: false,
       skipped: true,
-      reason: "No fue posible preparar archivos fuente para publicar."
+      reason: "No había cambios de Excel, GPX o TCX pendientes para publicar."
     };
   }
 
