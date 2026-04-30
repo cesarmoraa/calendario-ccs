@@ -8,6 +8,7 @@ const state = {
 
 const els = {
   welcome: document.getElementById('welcome'),
+  subtitle: document.getElementById('hero-subtitle'),
   status: document.getElementById('load-status'),
   metrics: document.getElementById('metrics-grid'),
   body: document.getElementById('calendar-body'),
@@ -42,6 +43,19 @@ function monthNameFromDate(dateText) {
     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
   ];
   return names[monthIndex] || 'Sin mes';
+}
+
+function parseRouteDate(dateText) {
+  const match = String(dateText || '').trim().match(/^(\d{2})\/(\d{2})\/(\d{2}|\d{4})$/);
+  if (!match) return null;
+
+  const day = Number.parseInt(match[1], 10);
+  const month = Number.parseInt(match[2], 10) - 1;
+  const rawYear = Number.parseInt(match[3], 10);
+  const year = match[3].length === 2 ? 2000 + rawYear : rawYear;
+  const parsed = new Date(year, month, day, 12, 0, 0, 0);
+
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
 }
 
 function routeMatches(route, filters) {
@@ -83,6 +97,26 @@ function renderMetrics(routes) {
   els.metrics.innerHTML = cards
     .map(([title, value]) => `<article class="metric-card"><span>${title}</span><strong>${value}</strong></article>`)
     .join('') + `<article class="metric-card metric-wide metric-mix"><span>Mix de perfiles</span><div class="metric-chip-row">${mixMarkup}</div></article>`;
+}
+
+function renderYearToDateSummary(routes) {
+  if (!els.subtitle) return;
+
+  const today = new Date();
+  today.setHours(23, 59, 59, 999);
+
+  const totals = routes.reduce((acc, route) => {
+    const routeDate = parseRouteDate(route.date);
+    if (!routeDate) return acc;
+    if (routeDate.getFullYear() !== today.getFullYear()) return acc;
+    if (routeDate > today) return acc;
+
+    acc.km += route.distanceKm || 0;
+    acc.gain += route.elevationGain || 0;
+    return acc;
+  }, { km: 0, gain: 0 });
+
+  els.subtitle.textContent = `Este año llevamos ${fmtNumber(totals.km, 1)} km y ${fmtNumber(totals.gain, 0)} m de altimetría acumulada.`;
 }
 
 function renderTable(routes) {
@@ -205,6 +239,7 @@ async function fetchCalendar() {
   state.routes = data.routes;
   state.report = data.report;
   state.loadedAt = data.loadedAt;
+  renderYearToDateSummary(state.routes);
   renderFilters(state.routes);
   applyFilters();
 }
