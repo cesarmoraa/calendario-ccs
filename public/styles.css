@@ -362,7 +362,7 @@ select {
 
 .admin-access-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 12px;
 }
 
@@ -405,26 +405,6 @@ select {
   text-transform: uppercase;
   font-size: 0.72rem;
   letter-spacing: 0.08em;
-}
-
-.admin-never-entered {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: flex-start;
-}
-
-.admin-never-chip {
-  display: inline-flex;
-  align-items: center;
-  min-height: 32px;
-  padding: 0 10px;
-  border-radius: 999px;
-  border: 1px solid rgba(101, 201, 240, 0.14);
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--accent-3);
-  font-size: 0.88rem;
-  font-weight: 600;
 }
 
 /* BUTTONS */
@@ -707,8 +687,7 @@ select {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .admin-access-metrics,
-  .admin-access-grid {
+  .admin-access-metrics {
     grid-template-columns: 1fr;
   }
 }

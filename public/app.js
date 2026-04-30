@@ -15,9 +15,7 @@ const els = {
   adminPanel: document.getElementById('admin-access-panel'),
   adminMetrics: document.getElementById('admin-access-metrics'),
   adminAccessCount: document.getElementById('admin-access-count'),
-  adminNeverCount: document.getElementById('admin-never-count'),
   adminAccessBody: document.getElementById('admin-access-body'),
-  adminNeverEntered: document.getElementById('admin-never-entered'),
   body: document.getElementById('calendar-body'),
   mobile: document.getElementById('mobile-cards'),
   refresh: document.getElementById('refresh-btn'),
@@ -172,8 +170,7 @@ function renderAccessSummary(summary) {
 
   const cards = [
     ['Ingresos exitosos', summary.totals.successfulLogins],
-    ['Cuentas con ingreso', summary.totals.accountsWithAccess],
-    ['Socios sin ingreso', summary.totals.membersNeverEntered]
+    ['Cuentas con ingreso', summary.totals.accountsWithAccess]
   ];
 
   els.adminMetrics.innerHTML = cards
@@ -191,11 +188,6 @@ function renderAccessSummary(summary) {
       </tr>
     `).join('')
     : '<tr><td colspan="4">Todavía no hay ingresos exitosos registrados.</td></tr>';
-
-  els.adminNeverCount.textContent = `${summary.neverEntered.length} socios`;
-  els.adminNeverEntered.innerHTML = summary.neverEntered.length
-    ? summary.neverEntered.map((entry) => `<span class="admin-never-chip">${entry.name}</span>`).join('')
-    : '<p class="admin-empty">Todos los socios ya registran al menos un ingreso.</p>';
 
   els.adminPanel.hidden = false;
 }
