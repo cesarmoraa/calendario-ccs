@@ -20,6 +20,13 @@ const ADMIN_CREDENTIALS = {
   rut: "admin-master",
   role: "admin"
 };
+const VIEWER_CREDENTIALS = {
+  username: "visita",
+  password: "Visita$",
+  name: "Visita",
+  rut: "visitor-master",
+  role: "view"
+};
 const INVALID_LOGIN_ERROR = "No fue posible validar el acceso.";
 
 const MIME_TYPES = {
@@ -1010,6 +1017,21 @@ function validateCredentials(username, password) {
     };
   }
 
+  if (normalizedUsername.toLowerCase() === VIEWER_CREDENTIALS.username) {
+    if (normalizedPassword !== VIEWER_CREDENTIALS.password) {
+      return { ok: false, error: INVALID_LOGIN_ERROR };
+    }
+
+    return {
+      ok: true,
+      user: {
+        name: VIEWER_CREDENTIALS.name,
+        rut: VIEWER_CREDENTIALS.rut,
+        role: VIEWER_CREDENTIALS.role
+      }
+    };
+  }
+
   return validatePin(normalizedUsername, normalizedPassword);
 }
 
@@ -1017,6 +1039,20 @@ function requireSession(req, res) {
   const session = getSession(req);
   if (!session) {
     unauthorized(res);
+    return null;
+  }
+  return session;
+}
+
+function forbidden(res, message = "No autorizado.") {
+  sendJson(res, 403, { error: message });
+}
+
+function requireAdminSession(req, res) {
+  const session = requireSession(req, res);
+  if (!session) return null;
+  if (session.role !== "admin") {
+    forbidden(res);
     return null;
   }
   return session;
@@ -1092,7 +1128,7 @@ async function handleApi(req, res, pathname) {
   }
 
   if (pathname === "/api/refresh" && req.method === "POST") {
-    const session = requireSession(req, res);
+    const session = requireAdminSession(req, res);
     if (!session) return;
     try {
       await refreshData();
@@ -1108,14 +1144,14 @@ async function handleApi(req, res, pathname) {
   }
 
   if (pathname === "/api/access-log" && req.method === "GET") {
-    const session = requireSession(req, res);
+    const session = requireAdminSession(req, res);
     if (!session) return;
     sendJson(res, 200, safeReadJson(ACCESS_LOG_PATH, []));
     return;
   }
 
   if (pathname === "/api/report" && req.method === "GET") {
-    const session = requireSession(req, res);
+    const session = requireAdminSession(req, res);
     if (!session) return;
     sendText(res, 200, state.reportText || "Sin reporte");
     return;
