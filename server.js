@@ -20,13 +20,22 @@ const ADMIN_CREDENTIALS = {
   rut: "admin-master",
   role: "admin"
 };
-const VIEWER_CREDENTIALS = {
-  username: "visita",
-  password: "Visita$",
-  name: "Visita",
-  rut: "visitor-master",
-  role: "view"
-};
+const VIEWER_CREDENTIALS = [
+  {
+    username: "visita",
+    password: "Visita$",
+    name: "Visita",
+    rut: "visitor-master",
+    role: "view"
+  },
+  {
+    username: "solange",
+    password: "ccs2026$",
+    name: "Solange",
+    rut: "viewer-solange",
+    role: "view"
+  }
+];
 const INVALID_LOGIN_ERROR = "No fue posible validar el acceso.";
 
 const MIME_TYPES = {
@@ -1017,17 +1026,18 @@ function validateCredentials(username, password) {
     };
   }
 
-  if (normalizedUsername.toLowerCase() === VIEWER_CREDENTIALS.username) {
-    if (normalizedPassword !== VIEWER_CREDENTIALS.password) {
+  const viewerUser = VIEWER_CREDENTIALS.find((viewer) => normalizedUsername.toLowerCase() === viewer.username);
+  if (viewerUser) {
+    if (normalizedPassword !== viewerUser.password) {
       return { ok: false, error: INVALID_LOGIN_ERROR };
     }
 
     return {
       ok: true,
       user: {
-        name: VIEWER_CREDENTIALS.name,
-        rut: VIEWER_CREDENTIALS.rut,
-        role: VIEWER_CREDENTIALS.role
+        name: viewerUser.name,
+        rut: viewerUser.rut,
+        role: viewerUser.role
       }
     };
   }
