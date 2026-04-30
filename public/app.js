@@ -122,7 +122,7 @@ function renderCards(routes) {
         <div><span>Tipo</span><strong>${route.type}</strong></div>
         <div><span>Inicio</span><strong>${route.start}</strong></div>
         <div><span>Perfil</span><strong>${route.profile}</strong></div>
-        <div><span>Tiempo</span><strong>${route.timeText}</strong></div>
+        <div><span>Tiempo Aprox</span><strong>${route.timeText}</strong></div>
         <div><span>Distancia</span><strong>${route.distanceText}</strong></div>
         <div><span>D+</span><strong>${route.elevationText}</strong></div>
       </div>
