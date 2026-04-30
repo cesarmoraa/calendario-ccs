@@ -164,11 +164,13 @@ function currentExcelModifiedTimeMs() {
 }
 
 function currentRouteSourcesModifiedTimeMs() {
-  return Math.max(
-    currentExcelModifiedTimeMs(),
-    directoryLatestModifiedTimeMs(resolveGpxDir()),
-    directoryLatestModifiedTimeMs(resolveTcxDir())
+  const routeDirs = Array.from(new Set([resolveGpxDir(), resolveTcxDir()]));
+  const latestRouteSource = routeDirs.reduce(
+    (latest, directoryPath) => Math.max(latest, directoryLatestModifiedTimeMs(directoryPath)),
+    0
   );
+
+  return Math.max(currentExcelModifiedTimeMs(), latestRouteSource);
 }
 
 function processedDataModifiedTimeMs() {
@@ -178,7 +180,9 @@ function processedDataModifiedTimeMs() {
 function resolveGpxDir() {
   const candidates = [
     path.join(ROOT_DIR, "gpx"),
-    path.join(ROOT_DIR, "GPX")
+    path.join(ROOT_DIR, "GPX"),
+    path.join(ROOT_DIR, "tcx"),
+    path.join(ROOT_DIR, "TCX")
   ];
   return candidates.find((candidate) => fs.existsSync(candidate)) || candidates[0];
 }
@@ -186,7 +190,9 @@ function resolveGpxDir() {
 function resolveTcxDir() {
   const candidates = [
     path.join(ROOT_DIR, "tcx"),
-    path.join(ROOT_DIR, "TCX")
+    path.join(ROOT_DIR, "TCX"),
+    path.join(ROOT_DIR, "gpx"),
+    path.join(ROOT_DIR, "GPX")
   ];
   return candidates.find((candidate) => fs.existsSync(candidate)) || candidates[0];
 }
@@ -232,32 +238,14 @@ function listPreStagedFiles() {
     .filter(Boolean);
 }
 
-function listChangedPublishableSources() {
-  const output = execFileSync(
-    "git",
-    ["status", "--porcelain", "--untracked-files=all", "--", "calendario.xlsx", "Template_Calendario_CCS_GPX.xlsx", "GPX", "gpx", "TCX", "tcx"],
-    {
-      cwd: ROOT_DIR,
-      encoding: "utf8",
-      maxBuffer: 4 * 1024 * 1024
-    }
-  );
+function stagePublishableSources() {
+  const publishScopes = ["calendario.xlsx", "Template_Calendario_CCS_GPX.xlsx", "GPX", "gpx", "TCX", "tcx"];
 
-  const paths = new Set();
-
-  for (const rawLine of output.split(/\r?\n/)) {
-    const line = rawLine.trimEnd();
-    if (!line) continue;
-
-    const payload = line.slice(3).trim();
-    const relativePath = payload.includes(" -> ") ? payload.split(" -> ").pop().trim() : payload;
-
-    if (isPublishableSourcePath(relativePath)) {
-      paths.add(relativePath);
-    }
-  }
-
-  return Array.from(paths).sort();
+  execFileSync("git", ["add", "-A", "--", ...publishScopes], {
+    cwd: ROOT_DIR,
+    encoding: "utf8",
+    maxBuffer: 4 * 1024 * 1024
+  });
 }
 
 function autoPublishSourceChanges() {
@@ -270,20 +258,7 @@ function autoPublishSourceChanges() {
     };
   }
 
-  const changedSources = listChangedPublishableSources();
-  if (!changedSources.length) {
-    return {
-      published: false,
-      skipped: true,
-      reason: "No había cambios de Excel, GPX o TCX pendientes para publicar."
-    };
-  }
-
-  execFileSync("git", ["add", "-A", "--", ...changedSources], {
-    cwd: ROOT_DIR,
-    encoding: "utf8",
-    maxBuffer: 4 * 1024 * 1024
-  });
+  stagePublishableSources();
 
   const stagedSources = listPreStagedFiles().filter(isPublishableSourcePath);
   if (!stagedSources.length) {
