@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendario CCS 2026</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <div class="brand-badge">Ciclo Club Santiago</div>
+        <h1>Calendario de Rutas CCS 2026</h1>
+        <p class="subtitle">Fuente viva desde Excel + GPX para revisar rutas en PC y móvil.</p>
+      </div>
+      <div class="header-actions">
+        <div id="welcome" class="welcome"></div>
+        <button id="refresh-btn" class="secondary-btn">Actualizar calendario</button>
+        <button id="logout-btn" class="ghost-btn">Salir</button>
+      </div>
+    </header>
+
+    <section class="toolbar">
+      <div class="filter-grid">
+        <label>
+          Mes
+          <select id="filter-month"></select>
+        </label>
+        <label>
+          Inicio
+          <select id="filter-start"></select>
+        </label>
+        <label>
+          Perfil
+          <select id="filter-profile"></select>
+        </label>
+        <label>
+          Tipo salida
+          <select id="filter-type"></select>
+        </label>
+        <label>
+          Estado
+          <select id="filter-state"></select>
+        </label>
+        <label class="search-field">
+          Buscar ruta
+          <input id="filter-search" type="text" placeholder="Nombre de ruta">
+        </label>
+      </div>
+      <div class="toolbar-links">
+        <a href="/api/report" target="_blank" rel="noopener noreferrer">Reporte de validación</a>
+        <a href="/api/access-log" target="_blank" rel="noopener noreferrer">Registro de accesos</a>
+      </div>
+    </section>
+
+    <section class="metrics-grid" id="metrics-grid"></section>
+
+    <section class="status-banner">
+      <span id="load-status">Cargando calendario...</span>
+    </section>
+
+    <section class="desktop-table-wrap">
+      <table class="calendar-table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Tipo</th>
+            <th>Ruta</th>
+            <th>Inicio</th>
+            <th>Perfil</th>
+            <th>Distancia</th>
+            <th>D+</th>
+            <th>Tiempo</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="calendar-body"></tbody>
+      </table>
+    </section>
+
+    <section class="mobile-cards" id="mobile-cards"></section>
+  </div>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>

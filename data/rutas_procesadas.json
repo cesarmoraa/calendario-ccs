@@ -1,0 +1,1230 @@
+{
+  "loadedAt": "29-04-2026, 8:59:31 p. m.",
+  "routes": [
+    {
+      "id": "route-16",
+      "date": "03/04/25",
+      "dateIso": "2025-04-03T00:00:00.000Z",
+      "monthName": "Abril",
+      "type": "Tradicional",
+      "route": "Mc Chamisero - Quiliapilun",
+      "start": "Mc Chamisero",
+      "profile": "Fondo",
+      "distanceKm": 138.464577796275,
+      "distanceText": "138.5 km",
+      "elevationGain": 542.099999999998,
+      "elevationText": "542 m",
+      "timeText": "Por definir",
+      "stravaUrl": "https://www.strava.com/routes/3484699465342144398",
+      "mapsUrl": "https://www.google.com/maps?q=-33.305240,-70.666389",
+      "wazeUrl": "https://waze.com/ul?ll=-33.305240,-70.666389&navigate=yes",
+      "gpxFile": "Mc Chamisero - Quiliapilun.gpx",
+      "gpxResolvedPath": "Mc Chamisero - Quiliapilun.gpx",
+      "latitude": -33.30524,
+      "longitude": -70.666389,
+      "profileKey": "fondo",
+      "status": "Confirmada",
+      "statusKey": "confirmada"
+    },
+    {
+      "id": "route-2",
+      "date": "03/01/26",
+      "dateIso": "2026-01-03T00:00:00.000Z",
+      "monthName": "Enero",
+      "type": "Tradicional",
+      "route": "Aurora - Ibacache - San Jeronimo(Y) (bis)",
+      "start": "Aurora",
+      "profile": "Media montaña",
+      "distanceKm": 133.54672345562975,
+      "distanceText": "133.5 km",
+      "elevationGain": 1206.349999999998,
+      "elevationText": "1206 m",
+      "timeText": "Por definir",
+      "stravaUrl": "https://www.strava.com/routes/3350886847118088952",
+      "mapsUrl": "https://www.google.com/maps?q=-33.432700,-71.030800",
+      "wazeUrl": "https://waze.com/ul?ll=-33.432700,-71.030800&navigate=yes",
+      "gpxFile": "La Aurora - cruce San Jeronimo - Santa Rosa.gpx",
+      "gpxResolvedPath": "La Aurora - cruce San Jeronimo - Santa Rosa.gpx",
+      "latitude": -33.432700000000004,
+      "longitude": -71.0308,
+      "profileKey": "media-montana",
+      "status": "Confirmada",
+      "statusKey": "confirmada"
+    },
+    {
+      "id": "route-3",
+      "date": "10/01/26",
+      "dateIso": "2026-01-10T00:00:00.000Z",
+      "monthName": "Enero",
+      "type": "Tradicional",
+      "route": "Quilapilun - Chacabuco - Bateas - Rungue - Til Til - Quilapilun",
+      "start": "Quilapilun",
+      "profile": "Alta montaña",
+      "distanceKm": 129.4156016918702,
+      "distanceText": "129.4 km",
+      "elevationGain": 2263.770000000003,
+      "elevationText": "2264 m",
+      "timeText": "Por definir",
+      "stravaUrl": "https://www.strava.com/routes/3361191594009946606",
+      "mapsUrl": "https://www.google.com/maps?q=-33.094880,-70.694940",
+      "wazeUrl": "https://waze.com/ul?ll=-33.094880,-70.694940&navigate=yes",
+      "gpxFile": "Quilapilun- El Oregano - Quilapilun ( por las Bateas ).gpx",
+      "gpxResolvedPath": "Quilapilun- El Orégano - Quilapilun ( por las Bateas ).gpx",
+      "latitude": -33.09488,
+      "longitude": -70.69494,
+      "profileKey": "alta-montana",
+      "status": "Confirmada",
+      "statusKey": "confirmada"
+    },
+    {
+      "id": "route-4",
+      "date": "17/01/26",
+      "dateIso": "2026-01-17T00:00:00.000Z",
+      "monthName": "Enero",
+      "type": "Tradicional",
+      "route": "Kross - Ibacache - casa blanca - zapata - Kross",
+      "start": "Kross",
+      "profile": "Media montaña",
+      "distanceKm": 133.59154082948672,
+      "distanceText": "133.6 km",
+      "elevationGain": 1245.8999999999996,
+      "elevationText": "1246 m",
+      "timeText": "Por definir",
+      "stravaUrl": "https://www.strava.com/routes/3437110365576045568",
+      "mapsUrl": "https://www.google.com/maps?q=-33.363870,-71.154770",
+      "wazeUrl": "https://waze.com/ul?ll=-33.363870,-71.154770&navigate=yes",
+      "gpxFile": "Kross - Ibacache - Lagunillas - San Jeronimo - Zapata.gpx",
+      "gpxResolvedPath": "Kross - Ibacache - Lagunillas - San Jerónimo - Zapata.gpx",
+      "latitude": -33.363870000000006,
+      "longitude": -71.15477,
+      "profileKey": "media-montana",
+      "status": "Confirmada",
+      "statusKey": "confirmada"
+    },
+    {
+      "id": "route-5",
+      "date": "24/01/26",
+      "dateIso": "2026-01-24T00:00:00.000Z",
+      "monthName": "Enero",
+      "type": "Tradicional",
+      "route": "Vizcachas - Melosas helipuesto (Bis)",
+      "start": "Vizcachas",
+      "profile": "Media montaña",
+      "distanceKm": 114.65529112818587,
+      "distanceText": "114.7 km",
+      "elevationGain": 1569.49,
+      "elevationText": "1569 m",
+      "timeText": "Por definir",
+      "stravaUrl": "https://www.strava.com/routes/3414553136020338090",
+      "mapsUrl": "https://www.google.com/maps?q=-33.599160,-70.517210",
+      "wazeUrl": "https://waze.com/ul?ll=-33.599160,-70.517210&navigate=yes",
+      "gpxFile": "Las Vizcachas - Las Melosas.gpx",
+      "gpxResolvedPath": "Las Vizcachas - Las Melosas.gpx",
+      "latitude": -33.599160000000005,
+      "longitude": -70.51721,
+      "profileKey": "media-montana",
+      "status": "Confirmada",
+      "statusKey": "confirmada"
+    },
+    {
+      "id": "route-6",
+      "date": "31/01/26",
+      "dateIso": "2026-01-31T00:00:00.000Z",
+      "monthName": "Enero",
+      "type": "Tradicional",
+      "route": "Aurora - Cuncumen (Bis)",
+      "start": "Aurora",
+      "profile": "Fondo",
+      "distanceKm": 138.04765215369227,
+      "distanceText": "138.0 km",
+      "elevationGain": 981.1900000000005,
+      "elevationText": "981 m",
+      "timeText": "Por definir",
+      "stravaUrl": "https://www.strava.com/routes/3333265148908755658",
+      "mapsUrl": "https://www.google.com/maps?q=-33.432730,-71.030770",
+      "wazeUrl": "https://waze.com/ul?ll=-33.432730,-71.030770&navigate=yes",
+      "gpxFile": "La Aurora - Cuncumen CCS.gpx",
+      "gpxResolvedPath": "La Aurora - Cuncumen CCS.gpx",
+      "latitude": -33.43273,
+      "longitude": -71.03077,
+      "profileKey": "fondo",
+      "status": "Confirmada",
+      "statusKey": "confirmada"
+    },
+    {
+      "id": "route-7",
+      "date": "07/02/26",
+      "dateIso": "2026-02-07T00:00:00.000Z",
+      "monthName": "Febrero",
+      "type": "Tradicional",
+      "route": "Aurora - doble Lo Prado - doble Barriga",
+      "start": "Aurora",
+      "profile": "Media montaña",
+      "distanceKm": 91.02990583654474,
+      "distanceText": "91.0 km",
+      "elevationGain": 1712.1999999999998,
+      "elevationText": "1712 m",
+      "timeText": "Por definir",
+      "stravaUrl": "https://www.strava.com/routes/3437954682669553650",
+      "mapsUrl": "https://www.google.com/maps?q=-33.432740,-71.030750",
+      "wazeUrl": "https://waze.com/ul?ll=-33.432740,-71.030750&navigate=yes",
+      "gpxFile": "Aurora - doble Lo Prado - doble Barriga.gpx",
+      "gpxResolvedPath": "Aurora - doble Lo Prado - doble Barriga.gpx",
+      "latitude": -33.43274,
+      "longitude": -71.03075000000001,
+      "profileKey": "media-montana",
+      "status": "Confirmada",
+      "statusKey": "confirmada"
+    },
+    {
+      "id": "route-8",
+      "date": "14/02/26",
+      "dateIso": "2026-02-14T00:00:00.000Z",
+      "monthName": "Febrero",
+      "type": "Tradicional",
+      "route": "Quilapilun - Til til - Caleu - cumbre Dormida - Quilapilun",
+      "start": "Quilapilun",
+      "profile": "Media montaña",
+      "distanceKm": 106.39558649680758,
+      "distanceText": "106.4 km",
+      "elevationGain": 1214.9200000000033,
+      "elevationText": "1215 m",
+      "timeText": "Por definir",
+      "stravaUrl": "https://www.strava.com/routes/2893591328570391102",
+      "mapsUrl": "https://www.google.com/maps?q=-33.094960,-70.693810",
+      "wazeUrl": "https://waze.com/ul?ll=-33.094960,-70.693810&navigate=yes",
+      "gpxFile": "Quilapilun - El Oregano - Quilapilun.gpx",
+      "gpxResolvedPath": "Quilapilun - El Oregano - Quilapilun.gpx",
+      "latitude": -33.09496,
+      "longitude": -70.69381,
+      "profileKey": "media-montana",
+      "status": "Confirmada",
+      "statusKey": "confirmada"
+    },
+    {
+      "id": "route-9",
+      "date": "21/02/26",
+      "dateIso": "2026-02-21T00:00:00.000Z",
+      "monthName": "Febrero",
+      "type": "Tradicional",
+      "route": "Coda - Colliguay",
+      "start": "Coda",
+      "profile": "Alta montaña",
+      "distanceKm": 116.33196328099389,
+      "distanceText": "116.3 km",
+      "elevationGain": 2040.25,
+      "elevationText": "2040 m",
+      "timeText": "Por definir",
+      "stravaUrl": "https://www.strava.com/routes/3371266037396733478",
+      "mapsUrl": "https://www.google.com/maps?q=-33.293350,-71.410740",
+      "wazeUrl": "https://waze.com/ul?ll=-33.293350,-71.410740&navigate=yes",
+      "gpxFile": "Coda 2025 Ristretto.gpx",
+      "gpxResolvedPath": "Coda 2025 Ristretto.gpx",
+      "latitude": -33.293350000000004,
+      "longitude": -71.41074,
+      "profileKey": "alta-montana",
+      "status": "Confirmada",
+      "statusKey": "confirmada"
+    },
+    {
+      "id": "route-10",
+      "date": "27/02/26",
+      "dateIso": "2026-02-27T00:00:00.000Z",
+      "monthName": "Febrero",
+      "type": "Paseo",
+      "route": "Farellones Full Moon + tres Valles",
+      "start": "Farellones Full Moon + tres Valles",
+      "profile": "Media montaña",
+      "distanceKm": 32.966997087772725,
+      "distanceText": "33.0 km",
+      "elevationGain": 1671.8300000000004,
+      "elevationText": "1672 m",
+      "timeText": "Por definir",
+      "stravaUrl": "https://www.strava.com/routes/3437970659683128532",
+      "mapsUrl": "https://www.google.com/maps?q=-33.370260,-70.507820",
+      "wazeUrl": "https://waze.com/ul?ll=-33.370260,-70.507820&navigate=yes",
+      "gpxFile": "Mall Sport - Farellones.gpx",
+      "gpxResolvedPath": "Mall Sport - Farellones.gpx",
+      "latitude": -33.37026,
+      "longitude": -70.50782000000001,
+      "profileKey": "media-montana",
+      "status": "Confirmada",
+      "statusKey": "confirmada"
+    },
+    {
+      "id": "route-11",
+      "date": "28/02/26",
+      "dateIso": "2026-02-28T00:00:00.000Z",
+      "monthName": "Febrero",
+      "type": "Paseo",
+      "route": "Farellones Full Moon + tres Valles",
+      "start": "Farellones Full Moon + tres Valles",
+      "profile": "Media montaña",
+      "distanceKm": 32.966997087772725,
+      "distanceText": "33.0 km",
+      "elevationGain": 1671.8300000000004,
+      "elevationText": "1672 m",
+      "timeText": "Por definir",
+      "stravaUrl": "https://www.strava.com/routes/3437970659683128532",
+      "mapsUrl": "https://www.google.com/maps?q=-33.370260,-70.507820",
+      "wazeUrl": "https://waze.com/ul?ll=-33.370260,-70.507820&navigate=yes",
+      "gpxFile": "Mall Sport - Farellones.gpx",
+      "gpxResolvedPath": "Mall Sport - Farellones.gpx",
+      "latitude": -33.37026,
+      "longitude": -70.50782000000001,
+      "profileKey": "media-montana",
+      "status": "Confirmada",
+      "statusKey": "confirmada"
+    },
+    {
+      "id": "route-12",
+      "date": "07/03/26",
+      "dateIso": "2026-03-07T00:00:00.000Z",
+      "monthName": "Marzo",
+      "type": "Tradicional",
+      "route": "Kross - Pangue - Ibacache (GFC)",
+      "start": "Kross",
+      "profile": "Media montaña",
+      "distanceKm": 122.08820296731474,
+      "distanceText": "122.1 km",
+      "elevationGain": 1099.1299999999992,
+      "elevationText": "1099 m",
+      "timeText": "Por definir",
+      "stravaUrl": "https://www.strava.com/routes/3158400013423630470",
+      "mapsUrl": "https://www.google.com/maps?q=-33.363390,-71.153970",
+      "wazeUrl": "https://waze.com/ul?ll=-33.363390,-71.153970&navigate=yes",
+      "gpxFile": "Kross Pangue Casablanca Ibacache Kross.gpx",
+      "gpxResolvedPath": "Kross Pangue Casablanca Ibacache Kross.gpx",
+      "latitude": -33.36339,
+      "longitude": -71.15397,
+      "profileKey": "media-montana",
+      "status": "Confirmada",
+      "statusKey": "confirmada"
+    },
+    {
+      "id": "route-13",
+      "date": "14/03/26",
+      "dateIso": "2026-03-14T00:00:00.000Z",
+      "monthName": "Marzo",
+      "type": "Tradicional",
+      "route": "Mc Chamisero - Til Til - Cumbre La Dormida (Bis)",
+      "start": "Mc Chamisero",
+      "profile": "Media montaña",
+      "distanceKm": 136.4769324774767,
+      "distanceText": "136.5 km",
+      "elevationGain": 1100.9300000000005,
+      "elevationText": "1101 m",
+      "timeText": "Por definir",
+      "stravaUrl": "https://www.strava.com/routes/3343553426172514788",
+      "mapsUrl": "https://www.google.com/maps?q=-33.304350,-70.666200",
+      "wazeUrl": "https://waze.com/ul?ll=-33.304350,-70.666200&navigate=yes",
+      "gpxFile": "MC Chamisero - Dormida Cumbre.gpx",
+      "gpxResolvedPath": "MC Chamisero - Dormida Cumbre.gpx",
+      "latitude": -33.30435,
+      "longitude": -70.6662,
+      "profileKey": "media-montana",
+      "status": "Confirmada",
+      "statusKey": "confirmada"
+    },
+    {
+      "id": "route-14",
+      "date": "21/03/26",
+      "dateIso": "2026-03-21T00:00:00.000Z",
+      "monthName": "Marzo",
+      "type": "Tradicional",
+      "route": "Portillo",
+      "start": "Portillo",
+      "profile": "Alta montaña",
+      "distanceKm": 118.12041812879771,
+      "distanceText": "118.1 km",
+      "elevationGain": 3527.4000000000015,
+      "elevationText": "3527 m",
+      "timeText": "Por definir",
+      "stravaUrl": "https://www.strava.com/routes/3335601587537110884",
+      "mapsUrl": "https://www.google.com/maps?q=-33.094860,-70.695180",
+      "wazeUrl": "https://waze.com/ul?ll=-33.094860,-70.695180&navigate=yes",
+      "gpxFile": "Quilapilun - Portillo.gpx",
+      "gpxResolvedPath": "Quilapilun - Portillo.gpx",
+      "latitude": -33.094860000000004,
+      "longitude": -70.69518000000001,
+      "profileKey": "alta-montana",
+      "status": "Confirmada",
+      "statusKey": "confirmada"
+    },
+    {
+      "id": "route-15",
+      "date": "28/03/26",
+      "dateIso": "2026-03-28T00:00:00.000Z",
+      "monthName": "Marzo",
+      "type": "Tradicional",
+      "route": "Vizcachas - Embalse el Yeso (Bis)",
+      "start": "Vizcachas",
+      "profile": "Alta montaña",
+      "distanceKm": 127.55525737046828,
+      "distanceText": "127.6 km",
+      "elevationGain": 2207.279999999995,
+      "elevationText": "2207 m",
+      "timeText": "Por definir",
+      "stravaUrl": "https://www.strava.com/routes/2934579737217096112",
+      "mapsUrl": "https://www.google.com/maps?q=-33.599760,-70.519850",
+      "wazeUrl": "https://waze.com/ul?ll=-33.599760,-70.519850&navigate=yes",
+      "gpxFile": "Las Vizcachas - El Yeso.gpx",
+      "gpxResolvedPath": "Las Vizcachas - El Yeso.gpx",
+      "latitude": -33.59976,
+      "longitude": -70.51985,
+      "profileKey": "alta-montana",
+      "status": "Confirmada",
+      "statusKey": "confirmada"
+    },
+    {
+      "id": "route-17",
+      "date": "11/04/26",
+      "dateIso": "2026-04-11T00:00:00.000Z",
+      "monthName": "Abril",
+      "type": "Tradicional",
+      "route": "Vina undurraga - Cuesta Chada (Bis)",
+      "start": "Vina undurraga",
+      "profile": "Fondo",
+      "distanceKm": 120.17458950094475,
+      "distanceText": "120.2 km",
+      "elevationGain": 828.72,
+      "elevationText": "829 m",
+      "timeText": "Por definir",
+      "stravaUrl": "https://www.strava.com/routes/3421990071423060296",
+      "mapsUrl": "https://www.google.com/maps?q=-33.646800,-70.885170",
+      "wazeUrl": "https://waze.com/ul?ll=-33.646800,-70.885170&navigate=yes",
+      "gpxFile": "Undurraga - Chada - Valdivia de Paine R.gpx",
+      "gpxResolvedPath": "Undurraga - Chada - Valdivia de Paine R.gpx",
+      "latitude": -33.646800000000006,
+      "longitude": -70.88517,
+      "profileKey": "fondo",
+      "status": "Confirmada",
+      "statusKey": "confirmada"
+    },
+    {
+      "id": "route-18",
+      "date": "18/04/26",
+      "dateIso": "2026-04-18T00:00:00.000Z",
+      "monthName": "Abril",
+      "type": "Tradicional",
+      "route": "Aurora - Barriga - Mallarauco - Chorombo alto - Aurora",
+      "start": "Aurora",
+      "profile": "Fondo",
+      "distanceKm": 112.67507479204026,
+      "distanceText": "112.7 km",
+      "elevationGain": 974.5500000000004,
+      "elevationText": "975 m",
+      "timeText": "Por definir",
+      "stravaUrl": "https://www.strava.com/routes/3384167544915616856",
+      "mapsUrl": "https://www.google.com/maps?q=-33.433080,-71.030350",
+      "wazeUrl": "https://waze.com/ul?ll=-33.433080,-71.030350&navigate=yes",
+      "gpxFile": "La Aurora - Barriga - Mallarauco - La Aurora.gpx",
+      "gpxResolvedPath": "La Aurora - Barriga - Mallarauco - La Aurora.gpx",
+      "latitude": -33.433080000000004,
+      "longitude": -71.03035000000001,
+      "profileKey": "fondo",
+      "status": "Confirmada",
+      "statusKey": "confirmada"
+    },
+    {
+      "id": "route-19",
+      "date": "25/04/26",
+      "dateIso": "2026-04-25T00:00:00.000Z",
+      "monthName": "Abril",
+      "type": "Tradicional",
+      "route": "Vizcachas - Melosas helipuesto (Bis)",
+      "start": "Vizcachas",
+      "profile": "Media montaña",
+      "distanceKm": 114.65529112818587,
+      "distanceText": "114.7 km",
+      "elevationGain": 1569.49,
+      "elevationText": "1569 m",
+      "timeText": "Por definir",
+      "stravaUrl": "https://www.strava.com/routes/3414553136020338090",
+      "mapsUrl": "https://www.google.com/maps?q=-33.599160,-70.517210",
+      "wazeUrl": "https://waze.com/ul?ll=-33.599160,-70.517210&navigate=yes",
+      "gpxFile": "Las Vizcachas - Las Melosas.gpx",
+      "gpxResolvedPath": "Las Vizcachas - Las Melosas.gpx",
+      "latitude": -33.599160000000005,
+      "longitude": -70.51721,
+      "profileKey": "media-montana",
+      "status": "Confirmada",
+      "statusKey": "confirmada"
+    },
+    {
+      "id": "route-20",
+      "date": "01/05/26",
+      "dateIso": "2026-05-01T00:00:00.000Z",
+      "monthName": "Mayo",
+      "type": "Tradicional",
+      "route": "Mc Chamisero - Til Til - Cumbre La Dormida (Bis)",
+      "start": "Mc Chamisero",
+      "profile": "Media montaña",
+      "distanceKm": 136.4769324774767,
+      "distanceText": "136.5 km",
+      "elevationGain": 1100.9300000000005,
+      "elevationText": "1101 m",
+      "timeText": "Por definir",
+      "stravaUrl": "https://www.strava.com/routes/3343553426172514788",
+      "mapsUrl": "https://www.google.com/maps?q=-33.304350,-70.666200",
+      "wazeUrl": "https://waze.com/ul?ll=-33.304350,-70.666200&navigate=yes",
+      "gpxFile": "MC Chamisero - Dormida Cumbre.gpx",
+      "gpxResolvedPath": "MC Chamisero - Dormida Cumbre.gpx",
+      "latitude": -33.30435,
+      "longitude": -70.6662,
+      "profileKey": "media-montana",
+      "status": "Confirmada",
+      "statusKey": "confirmada"
+    },
+    {
+      "id": "route-21",
+      "date": "08/05/26",
+      "dateIso": "2026-05-08T00:00:00.000Z",
+      "monthName": "Mayo",
+      "type": "Paseo",
+      "route": "Viaje Colchagua: Dia 1",
+      "start": "Viaje Colchagua: 3 dias",
+      "profile": "Por definir",
+      "distanceKm": null,
+      "distanceText": "Por definir",
+      "elevationGain": null,
+      "elevationText": "Por definir",
+      "timeText": "Por definir",
+      "stravaUrl": "Por definir",
+      "mapsUrl": "Pendiente",
+      "wazeUrl": "Pendiente",
+      "gpxFile": null,
+      "gpxResolvedPath": null,
+      "latitude": null,
+      "longitude": null,
+      "profileKey": "por-definir",
+      "status": "Por definir",
+      "statusKey": "por-definir"
+    },
+    {
+      "id": "route-22",
+      "date": "09/05/26",
+      "dateIso": "2026-05-09T00:00:00.000Z",
+      "monthName": "Mayo",
+      "type": "Paseo",
+      "route": "Viaje Colchagua: Dia 2",
+      "start": "Viaje Colchagua: 3 dias",
+      "profile": "Por definir",
+      "distanceKm": null,
+      "distanceText": "Por definir",
+      "elevationGain": null,
+      "elevationText": "Por definir",
+      "timeText": "Por definir",
+      "stravaUrl": "Por definir",
+      "mapsUrl": "Pendiente",
+      "wazeUrl": "Pendiente",
+      "gpxFile": null,
+      "gpxResolvedPath": null,
+      "latitude": null,
+      "longitude": null,
+      "profileKey": "por-definir",
+      "status": "Por definir",
+      "statusKey": "por-definir"
+    },
+    {
+      "id": "route-24",
+      "date": "09/05/26",
+      "dateIso": "2026-05-09T00:00:00.000Z",
+      "monthName": "Mayo",
+      "type": "Tradicional",
+      "route": "Quilapilun - Chacabuco - Bateas - Rungue - Til Til - Quilapilun",
+      "start": "Quilapilun",
+      "profile": "Alta montaña",
+      "distanceKm": 129.4156016918702,
+      "distanceText": "129.4 km",
+      "elevationGain": 2263.770000000003,
+      "elevationText": "2264 m",
+      "timeText": "Por definir",
+      "stravaUrl": "https://www.strava.com/routes/3361191594009946606",
+      "mapsUrl": "https://www.google.com/maps?q=-33.094880,-70.694940",
+      "wazeUrl": "https://waze.com/ul?ll=-33.094880,-70.694940&navigate=yes",
+      "gpxFile": "Quilapilun- El Oregano - Quilapilun ( por las Bateas ).GPX",
+      "gpxResolvedPath": "Quilapilun- El Orégano - Quilapilun ( por las Bateas ).gpx",
+      "latitude": -33.09488,
+      "longitude": -70.69494,
+      "profileKey": "alta-montana",
+      "status": "Confirmada",
+      "statusKey": "confirmada"
+    },
+    {
+      "id": "route-23",
+      "date": "10/05/26",
+      "dateIso": "2026-05-10T00:00:00.000Z",
+      "monthName": "Mayo",
+      "type": "Paseo",
+      "route": "Viaje Colchagua: Dia 3",
+      "start": "Viaje Colchagua: 3 dias",
+      "profile": "Por definir",
+      "distanceKm": null,
+      "distanceText": "Por definir",
+      "elevationGain": null,
+      "elevationText": "Por definir",
+      "timeText": "Por definir",
+      "stravaUrl": "Por definir",
+      "mapsUrl": "Pendiente",
+      "wazeUrl": "Pendiente",
+      "gpxFile": null,
+      "gpxResolvedPath": null,
+      "latitude": null,
+      "longitude": null,
+      "profileKey": "por-definir",
+      "status": "Por definir",
+      "statusKey": "por-definir"
+    },
+    {
+      "id": "route-25",
+      "date": "16/05/26",
+      "dateIso": "2026-05-16T00:00:00.000Z",
+      "monthName": "Mayo",
+      "type": "Tradicional",
+      "route": "Lo Prado - Cuesta Ibacache (Bis)",
+      "start": "Lo Prado",
+      "profile": "Media montaña",
+      "distanceKm": 124.04644384414468,
+      "distanceText": "124.0 km",
+      "elevationGain": 1388.4400000000007,
+      "elevationText": "1388 m",
+      "timeText": "Por definir",
+      "stravaUrl": "https://www.strava.com/routes/3071912851729141826",
+      "mapsUrl": "https://www.google.com/maps?q=-33.440860,-70.841770",
+      "wazeUrl": "https://waze.com/ul?ll=-33.440860,-70.841770&navigate=yes",
+      "gpxFile": "Lo Prado - Ibacache - Lo Prado.gpx",
+      "gpxResolvedPath": "Lo Prado - Ibacache - Lo Prado.gpx",
+      "latitude": -33.44086,
+      "longitude": -70.84177000000001,
+      "profileKey": "media-montana",
+      "status": "Confirmada",
+      "statusKey": "confirmada"
+    },
+    {
+      "id": "route-26",
+      "date": "23/05/26",
+      "dateIso": "2026-05-23T00:00:00.000Z",
+      "monthName": "Mayo",
+      "type": "Tradicional",
+      "route": "Veramonte - GFNY",
+      "start": "Veramonte",
+      "profile": "Media montaña",
+      "distanceKm": 116.93781532504345,
+      "distanceText": "116.9 km",
+      "elevationGain": 1471.8899999999987,
+      "elevationText": "1472 m",
+      "timeText": "Por definir",
+      "stravaUrl": "https://www.strava.com/routes/3360094577399793880",
+      "mapsUrl": "https://www.google.com/maps?q=-33.376380,-71.288210",
+      "wazeUrl": "https://waze.com/ul?ll=-33.376380,-71.288210&navigate=yes",
+      "gpxFile": "Veramonte - GFNY.gpx",
+      "gpxResolvedPath": "Veramonte - GFNY.gpx",
+      "latitude": -33.376380000000005,
+      "longitude": -71.28821,
+      "profileKey": "media-montana",
+      "status": "Confirmada",
+      "statusKey": "confirmada"
+    },
+    {
+      "id": "route-27",
+      "date": "30/05/26",
+      "dateIso": "2026-05-30T00:00:00.000Z",
+      "monthName": "Mayo",
+      "type": "Tradicional",
+      "route": "Lo Prado - Cuesta Ibacache (Bis)",
+      "start": "Lo Prado",
+      "profile": "Media montaña",
+      "distanceKm": 124.04644384414468,
+      "distanceText": "124.0 km",
+      "elevationGain": 1388.4400000000007,
+      "elevationText": "1388 m",
+      "timeText": "Por definir",
+      "stravaUrl": "https://www.strava.com/routes/3071912851729141826",
+      "mapsUrl": "https://www.google.com/maps?q=-33.440860,-70.841770",
+      "wazeUrl": "https://waze.com/ul?ll=-33.440860,-70.841770&navigate=yes",
+      "gpxFile": "Lo Prado - Ibacache - Lo Prado.gpx",
+      "gpxResolvedPath": "Lo Prado - Ibacache - Lo Prado.gpx",
+      "latitude": -33.44086,
+      "longitude": -70.84177000000001,
+      "profileKey": "media-montana",
+      "status": "Confirmada",
+      "statusKey": "confirmada"
+    },
+    {
+      "id": "route-28",
+      "date": "06/06/26",
+      "dateIso": "2026-06-06T00:00:00.000Z",
+      "monthName": "Junio",
+      "type": "Tradicional",
+      "route": "La Dormida - Chacabuco",
+      "start": "La Dormida",
+      "profile": "Media montaña",
+      "distanceKm": 123.95197755750355,
+      "distanceText": "124.0 km",
+      "elevationGain": 1625.8700000000003,
+      "elevationText": "1626 m",
+      "timeText": "Por definir",
+      "stravaUrl": "https://www.strava.com/routes/3102314345119364742",
+      "mapsUrl": "https://www.google.com/maps?q=-33.011470,-70.706270",
+      "wazeUrl": "https://waze.com/ul?ll=-33.011470,-70.706270&navigate=yes",
+      "gpxFile": "La Dormida - Chacabuco.gpx",
+      "gpxResolvedPath": "La Dormida - Chacabuco.gpx",
+      "latitude": -33.01147,
+      "longitude": -70.70627,
+      "profileKey": "media-montana",
+      "status": "Confirmada",
+      "statusKey": "confirmada"
+    },
+    {
+      "id": "route-29",
+      "date": "13/06/26",
+      "dateIso": "2026-06-13T00:00:00.000Z",
+      "monthName": "Junio",
+      "type": "Tradicional",
+      "route": "Coda - Las Dichas - Tunquen",
+      "start": "Coda",
+      "profile": "Media montaña",
+      "distanceKm": 108.43569141506151,
+      "distanceText": "108.4 km",
+      "elevationGain": 1893.360000000002,
+      "elevationText": "1893 m",
+      "timeText": "Por definir",
+      "stravaUrl": "https://www.strava.com/routes/3437984466678439730",
+      "mapsUrl": "https://www.google.com/maps?q=-33.301150,-71.410140",
+      "wazeUrl": "https://waze.com/ul?ll=-33.301150,-71.410140&navigate=yes",
+      "gpxFile": "Coda - Las Dichas - Tunquen.gpx",
+      "gpxResolvedPath": "Coda - Las Dichas - Tunquén.gpx",
+      "latitude": -33.30115,
+      "longitude": -71.41014000000001,
+      "profileKey": "media-montana",
+      "status": "Confirmada",
+      "statusKey": "confirmada"
+    },
+    {
+      "id": "route-30",
+      "date": "20/06/26",
+      "dateIso": "2026-06-20T00:00:00.000Z",
+      "monthName": "Junio",
+      "type": "Tradicional",
+      "route": "Mc Chamisero - Chicauma - Quilapilun (Bis)",
+      "start": "Mc Chamisero",
+      "profile": "Fondo",
+      "distanceKm": 111.72992849390285,
+      "distanceText": "111.7 km",
+      "elevationGain": 382.490000000002,
+      "elevationText": "382 m",
+      "timeText": "Por definir",
+      "stravaUrl": "https://www.strava.com/routes/3437995719268011878",
+      "mapsUrl": "https://www.google.com/maps?q=-33.305240,-70.664670",
+      "wazeUrl": "https://waze.com/ul?ll=-33.305240,-70.664670&navigate=yes",
+      "gpxFile": "Mc Chamisero - Chicauma - Punta Peuco.gpx",
+      "gpxResolvedPath": "Mc Chamisero - Chicauma - Punta Peuco.gpx",
+      "latitude": -33.305240000000005,
+      "longitude": -70.66467,
+      "profileKey": "fondo",
+      "status": "Confirmada",
+      "statusKey": "confirmada"
+    },
+    {
+      "id": "route-31",
+      "date": "27/06/26",
+      "dateIso": "2026-06-27T00:00:00.000Z",
+      "monthName": "Junio",
+      "type": "Paseo",
+      "route": "Viaje al Norte",
+      "start": "Viaje al Norte",
+      "profile": "Por definir",
+      "distanceKm": null,
+      "distanceText": "Por definir",
+      "elevationGain": null,
+      "elevationText": "Por definir",
+      "timeText": "Por definir",
+      "stravaUrl": "Por definir",
+      "mapsUrl": "Pendiente",
+      "wazeUrl": "Pendiente",
+      "gpxFile": null,
+      "gpxResolvedPath": null,
+      "latitude": null,
+      "longitude": null,
+      "profileKey": "por-definir",
+      "status": "Por definir",
+      "statusKey": "por-definir"
+    },
+    {
+      "id": "route-32",
+      "date": "28/06/26",
+      "dateIso": "2026-06-28T00:00:00.000Z",
+      "monthName": "Junio",
+      "type": "Paseo",
+      "route": "Viaje al Norte",
+      "start": "Viaje al Norte",
+      "profile": "Por definir",
+      "distanceKm": null,
+      "distanceText": "Por definir",
+      "elevationGain": null,
+      "elevationText": "Por definir",
+      "timeText": "Por definir",
+      "stravaUrl": "Por definir",
+      "mapsUrl": "Pendiente",
+      "wazeUrl": "Pendiente",
+      "gpxFile": null,
+      "gpxResolvedPath": null,
+      "latitude": null,
+      "longitude": null,
+      "profileKey": "por-definir",
+      "status": "Por definir",
+      "statusKey": "por-definir"
+    },
+    {
+      "id": "route-33",
+      "date": "29/06/26",
+      "dateIso": "2026-06-29T00:00:00.000Z",
+      "monthName": "Junio",
+      "type": "Paseo",
+      "route": "Viaje al Norte",
+      "start": "Viaje al Norte",
+      "profile": "Por definir",
+      "distanceKm": null,
+      "distanceText": "Por definir",
+      "elevationGain": null,
+      "elevationText": "Por definir",
+      "timeText": "Por definir",
+      "stravaUrl": "Por definir",
+      "mapsUrl": "Pendiente",
+      "wazeUrl": "Pendiente",
+      "gpxFile": null,
+      "gpxResolvedPath": null,
+      "latitude": null,
+      "longitude": null,
+      "profileKey": "por-definir",
+      "status": "Por definir",
+      "statusKey": "por-definir"
+    },
+    {
+      "id": "route-34",
+      "date": "04/07/26",
+      "dateIso": "2026-07-04T00:00:00.000Z",
+      "monthName": "Julio",
+      "type": "Tradicional",
+      "route": "La montana/OGM - Coya - El acido (Bis)",
+      "start": "La montana/OGM",
+      "profile": "Media montaña",
+      "distanceKm": 134.84342732941295,
+      "distanceText": "134.8 km",
+      "elevationGain": 1460.6400000000008,
+      "elevationText": "1461 m",
+      "timeText": "Por definir",
+      "stravaUrl": "https://www.strava.com/routes/3437989609682303794",
+      "mapsUrl": "https://www.google.com/maps?q=-33.965190,-70.687420",
+      "wazeUrl": "https://waze.com/ul?ll=-33.965190,-70.687420&navigate=yes",
+      "gpxFile": "OGM - Coya - El Acido (Bis).gpx",
+      "gpxResolvedPath": "OGM - Coya - El Acido (Bis).gpx",
+      "latitude": -33.96519,
+      "longitude": -70.68742,
+      "profileKey": "media-montana",
+      "status": "Confirmada",
+      "statusKey": "confirmada"
+    }
+  ],
+  "users": [
+    {
+      "name": "Paolo Abelli",
+      "rut": "6.379.956-4"
+    },
+    {
+      "name": "Fernando Acuna",
+      "rut": "9.472.883-5"
+    },
+    {
+      "name": "Sandro Araya",
+      "rut": "6.934.427-5"
+    },
+    {
+      "name": "Camilo Astudillo",
+      "rut": "16.303.578-2"
+    },
+    {
+      "name": "Cesar Aviles",
+      "rut": "6.032.108-6"
+    },
+    {
+      "name": "Enrique Becerra",
+      "rut": "9.888.784-9"
+    },
+    {
+      "name": "Marcelo Bernedo",
+      "rut": "7.677.357-2"
+    },
+    {
+      "name": "Soledad Biehl",
+      "rut": "11.632.144-0"
+    },
+    {
+      "name": "Cecilia Bolona",
+      "rut": "12.661.911-1"
+    },
+    {
+      "name": "Michael Bowers",
+      "rut": "48.228.066-8"
+    },
+    {
+      "name": "Jose Tomas Bunster",
+      "rut": "9.907.036-6"
+    },
+    {
+      "name": "Nicolas Bunster",
+      "rut": "13.473.290-3"
+    },
+    {
+      "name": "Sergio Bunster",
+      "rut": "9.903.146-8"
+    },
+    {
+      "name": "Jaime Bunzli",
+      "rut": "4.962.983-4"
+    },
+    {
+      "name": "Cristian Carrasco",
+      "rut": "7.040.119-3"
+    },
+    {
+      "name": "Braulio Carrera",
+      "rut": "10.955.259-3"
+    },
+    {
+      "name": "Franco Cisternas",
+      "rut": "12.239.643-6"
+    },
+    {
+      "name": "Roberto Cisternas",
+      "rut": "7.660.732-K"
+    },
+    {
+      "name": "Felipe Coeymans",
+      "rut": "10.332.002-K"
+    },
+    {
+      "name": "Canio Corbo",
+      "rut": "7.015.879-5"
+    },
+    {
+      "name": "Gustavo Cortes",
+      "rut": "6.363.429-8"
+    },
+    {
+      "name": "Guillermo Court",
+      "rut": "6.977.034-7"
+    },
+    {
+      "name": "Manlio Coviello",
+      "rut": "49.010.475-5"
+    },
+    {
+      "name": "Ivonne Delporte",
+      "rut": "10.034.132-8"
+    },
+    {
+      "name": "Jose Ignacio Diaz Llanten",
+      "rut": "15720618-4"
+    },
+    {
+      "name": "Maritza Echavarria",
+      "rut": "11.239.035-9"
+    },
+    {
+      "name": "Alejandra Echeverria",
+      "rut": "14.165.860-3"
+    },
+    {
+      "name": "Juan Pablo Feliu",
+      "rut": "9.048.732-9"
+    },
+    {
+      "name": "Mery Fuentes",
+      "rut": "9.491.906-1"
+    },
+    {
+      "name": "Oscar Gomez",
+      "rut": "7.154.613-6"
+    },
+    {
+      "name": "Alfonso Gomez",
+      "rut": "15.382.933-0"
+    },
+    {
+      "name": "Guillermo Gomez",
+      "rut": "7.546.124-0"
+    },
+    {
+      "name": "Oriana Gonzalez",
+      "rut": "25293314-k"
+    },
+    {
+      "name": "Mario Gonzalez",
+      "rut": "13209775-5"
+    },
+    {
+      "name": "Pablo Guerrero",
+      "rut": "7840203-2"
+    },
+    {
+      "name": "Matias Henriquez",
+      "rut": "12.114.093-4"
+    },
+    {
+      "name": "Felipe Ignacio Hernandez",
+      "rut": "15959545-5"
+    },
+    {
+      "name": "Nolly HERRERA",
+      "rut": "11741692-5"
+    },
+    {
+      "name": "Claudio Hurtado",
+      "rut": "8.427.195-0"
+    },
+    {
+      "name": "Alejandro Ihnen",
+      "rut": "7.773.422-8"
+    },
+    {
+      "name": "Pablo Ilones",
+      "rut": "24.222.606-2"
+    },
+    {
+      "name": "Ivan Jimenez",
+      "rut": "14.607.831-1"
+    },
+    {
+      "name": "Eduardo Katz",
+      "rut": "8546622-4"
+    },
+    {
+      "name": "Arnoldo kopplin",
+      "rut": "7.703.926-0"
+    },
+    {
+      "name": "Felipe Lalanne",
+      "rut": "14148513-k"
+    },
+    {
+      "name": "Francisca Leigthon",
+      "rut": "11648183-9"
+    },
+    {
+      "name": "Alejandro Leon",
+      "rut": "6.926.363-1"
+    },
+    {
+      "name": "Juan Pablo Leria",
+      "rut": "10522681-0"
+    },
+    {
+      "name": "Marcelo Leturia",
+      "rut": "10.966.730-7"
+    },
+    {
+      "name": "Alvaro Lopez",
+      "rut": "16126127-0"
+    },
+    {
+      "name": "Ricardo Lopez",
+      "rut": "8459653-1"
+    },
+    {
+      "name": "Raul Lyon",
+      "rut": "5.164.469-7"
+    },
+    {
+      "name": "Tomas Magallon",
+      "rut": "7212090-0"
+    },
+    {
+      "name": "Paolo Maino",
+      "rut": "8713352-4"
+    },
+    {
+      "name": "Christian Martin",
+      "rut": "8.510.190-0"
+    },
+    {
+      "name": "Rodrigo Martinez",
+      "rut": "10.652.669.9"
+    },
+    {
+      "name": "Marcela Maturana",
+      "rut": "10548107-1"
+    },
+    {
+      "name": "Fabian Mercado",
+      "rut": "18.220.962-k"
+    },
+    {
+      "name": "Laura Moller",
+      "rut": "28.791.080-0"
+    },
+    {
+      "name": "Ivana Morello",
+      "rut": "7109273-9"
+    },
+    {
+      "name": "Pablo Moreno",
+      "rut": "11836707-3"
+    },
+    {
+      "name": "Fernanda Morris",
+      "rut": "12928471-4"
+    },
+    {
+      "name": "Macarena Munita",
+      "rut": "11.896.498-5"
+    },
+    {
+      "name": "Fernando Musalem",
+      "rut": "9976077-K"
+    },
+    {
+      "name": "Miguel Nahuelcoy",
+      "rut": "132403031"
+    },
+    {
+      "name": "Patricio Novoa",
+      "rut": "7.567.783-9"
+    },
+    {
+      "name": "Carlos Obaid",
+      "rut": "7250144-6"
+    },
+    {
+      "name": "Daniel Perez",
+      "rut": "15661137-9"
+    },
+    {
+      "name": "Sebastian Pero",
+      "rut": "7.010.598-5"
+    },
+    {
+      "name": "Sebastian Pinto",
+      "rut": "9.898.235-3"
+    },
+    {
+      "name": "Gilson Quevedo",
+      "rut": "16.079.566-2"
+    },
+    {
+      "name": "Karin Rettig",
+      "rut": "7194204-K"
+    },
+    {
+      "name": "Raul Rivas",
+      "rut": "8.529.366-4"
+    },
+    {
+      "name": "Nicolas Roca",
+      "rut": "9.480.327-6"
+    },
+    {
+      "name": "Cesar Rojas",
+      "rut": "28.753.929-0"
+    },
+    {
+      "name": "Alberto Rosenzweig",
+      "rut": "7.456.991-9"
+    },
+    {
+      "name": "Renato Salvatierra",
+      "rut": "6.884.954-3"
+    },
+    {
+      "name": "Sebastian Schon",
+      "rut": "15.362.977-3"
+    },
+    {
+      "name": "Isidoro Silva",
+      "rut": "9.369.339-6"
+    },
+    {
+      "name": "Pablo Soffiato",
+      "rut": "23267753-8"
+    },
+    {
+      "name": "Richard Sutherland",
+      "rut": "6902317-7"
+    },
+    {
+      "name": "Federico Torres",
+      "rut": "15.719.895-5"
+    },
+    {
+      "name": "Pedro Pablo Torres",
+      "rut": "11391042-9"
+    },
+    {
+      "name": "Dino Troni",
+      "rut": "10.238.723-6"
+    },
+    {
+      "name": "Pablo Valenzuela",
+      "rut": "5.788.362-6"
+    },
+    {
+      "name": "Moises Veliz Martinez",
+      "rut": "25.293.332-8"
+    },
+    {
+      "name": "Richard Villalobos",
+      "rut": "25.476.961-4"
+    },
+    {
+      "name": "Marcelo von Chrismar",
+      "rut": "9.975.406-0"
+    },
+    {
+      "name": "Juan Carlos von Unger",
+      "rut": "7.053.621-8"
+    },
+    {
+      "name": "Karen Zarate",
+      "rut": "15.338.118-6"
+    },
+    {
+      "name": "Ely Zegers",
+      "rut": "7.106.907-9"
+    },
+    {
+      "name": "Claudio Zurita",
+      "rut": "10.308,990-5"
+    },
+    {
+      "name": "Francisco Montero",
+      "rut": "13.835.216-1"
+    }
+  ],
+  "report": {
+    "generatedAt": "29-04-2026, 8:59:31 p. m.",
+    "excelFile": "calendario.xlsx",
+    "gpxDirectory": "gpx",
+    "usersLoaded": 93,
+    "routesWithoutGpx": [
+      "08/05/26 · Viaje Colchagua: Dia 1",
+      "09/05/26 · Viaje Colchagua: Dia 2",
+      "10/05/26 · Viaje Colchagua: Dia 3",
+      "27/06/26 · Viaje al Norte",
+      "28/06/26 · Viaje al Norte",
+      "29/06/26 · Viaje al Norte"
+    ],
+    "gpxNotFound": [],
+    "routesWithoutStrava": [
+      "08/05/26 · Viaje Colchagua: Dia 1",
+      "09/05/26 · Viaje Colchagua: Dia 2",
+      "10/05/26 · Viaje Colchagua: Dia 3",
+      "27/06/26 · Viaje al Norte",
+      "28/06/26 · Viaje al Norte",
+      "29/06/26 · Viaje al Norte"
+    ],
+    "routesWithoutStart": [],
+    "ignoredRows": [],
+    "duplicatePins": []
+  }
+}

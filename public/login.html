@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CCS 2026 · Login</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="login-body">
+  <main class="login-shell">
+    <section class="login-card">
+      <div class="brand-badge">Ciclo Club Santiago</div>
+      <h1>Calendario privado 2026</h1>
+      <p>Ingresa tus últimos 4 dígitos del RUT como usuario y password, o usa el acceso administrador.</p>
+
+      <form id="login-form" class="login-form">
+        <label>
+          Usuario
+          <input type="text" id="username" autocomplete="username" placeholder="5678 o admin" required>
+        </label>
+        <label>
+          Password
+          <input type="password" id="password" autocomplete="current-password" placeholder="5678 o ccs2026$" required>
+        </label>
+        <button type="submit" class="primary-btn">Entrar</button>
+      </form>
+
+      <p id="login-message" class="login-message"></p>
+      <div class="login-help">
+        <span>Socios: si tu RUT es 12.345.678-9, tu acceso es 5678 / 5678.</span>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const form = document.getElementById('login-form');
+    const message = document.getElementById('login-message');
+
+    async function checkSession() {
+      const res = await fetch('/api/session', { credentials: 'same-origin' });
+      if (res.ok) window.location.href = '/index.html';
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      message.textContent = 'Validando acceso...';
+
+      const payload = {
+        username: document.getElementById('username').value.trim(),
+        password: document.getElementById('password').value.trim()
+      };
+
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          message.textContent = data.error || 'No fue posible iniciar sesión.';
+          return;
+        }
+        window.location.href = '/index.html';
+      } catch (error) {
+        message.textContent = 'Error de conexión con el servidor.';
+      }
+    });
+
+    checkSession();
+  </script>
+</body>
+</html>

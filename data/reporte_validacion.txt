@@ -1,0 +1,31 @@
+Reporte de validación CCS 2026
+Generado: 29-04-2026, 8:59:31 p. m.
+
+Excel fuente: calendario.xlsx
+Carpeta GPX: gpx
+Usuarios cargados: 93
+
+Rutas sin GPX: 6
+- 08/05/26 · Viaje Colchagua: Dia 1
+- 09/05/26 · Viaje Colchagua: Dia 2
+- 10/05/26 · Viaje Colchagua: Dia 3
+- 27/06/26 · Viaje al Norte
+- 28/06/26 · Viaje al Norte
+- 29/06/26 · Viaje al Norte
+
+GPX no encontrados: 0
+
+Rutas sin Strava: 6
+- 08/05/26 · Viaje Colchagua: Dia 1
+- 09/05/26 · Viaje Colchagua: Dia 2
+- 10/05/26 · Viaje Colchagua: Dia 3
+- 27/06/26 · Viaje al Norte
+- 28/06/26 · Viaje al Norte
+- 29/06/26 · Viaje al Norte
+
+Rutas sin Inicio: 0
+
+Filas ignoradas: 0
+
+Usuarios duplicados por PIN: 0
+
