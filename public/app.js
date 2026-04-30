@@ -45,6 +45,11 @@ function monthNameFromDate(dateText) {
   return names[monthIndex] || 'Sin mes';
 }
 
+const MONTH_ORDER = [
+  'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+  'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+];
+
 function parseRouteDate(dateText) {
   const match = String(dateText || '').trim().match(/^(\d{2})\/(\d{2})\/(\d{2}|\d{4})$/);
   if (!match) return null;
@@ -171,9 +176,13 @@ function renderCards(routes) {
 
 function renderFilters(routes) {
   const unique = (values) => ['Todos', ...Array.from(new Set(values)).filter(Boolean)];
+  const orderedMonths = (values) => {
+    const presentMonths = new Set(Array.from(new Set(values)).filter(Boolean));
+    return ['Todos', ...MONTH_ORDER.filter((month) => presentMonths.has(month)), ...Array.from(presentMonths).filter((month) => !MONTH_ORDER.includes(month))];
+  };
 
   const options = {
-    month: unique(routes.map((route) => route.monthName)),
+    month: orderedMonths(routes.map((route) => route.monthName)),
     start: unique(routes.map((route) => route.start)),
     profile: unique(routes.map((route) => route.profile)),
     type: unique(routes.map((route) => route.type)),
