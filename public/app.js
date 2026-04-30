@@ -22,6 +22,10 @@ const els = {
   search: document.getElementById('filter-search')
 };
 
+function firstNameFromFullName(value) {
+  return String(value || '').trim().split(/\s+/)[0] || '';
+}
+
 function fmtNumber(value, digits = 1) {
   if (typeof value !== 'number' || Number.isNaN(value)) return 'Por definir';
   return new Intl.NumberFormat('es-CL', {
@@ -185,7 +189,9 @@ async function fetchSession() {
   }
   const data = await res.json();
   state.user = data.user;
-  els.welcome.textContent = `Hola, ${state.user.name}`;
+  const firstName = firstNameFromFullName(state.user.name);
+  els.welcome.textContent = `Hola, ${firstName}`;
+  els.refresh.hidden = state.user.role !== 'admin';
 }
 
 async function fetchCalendar() {

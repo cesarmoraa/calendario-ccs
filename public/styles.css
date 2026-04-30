@@ -48,6 +48,10 @@ select {
   font: inherit;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 /* LOGIN */
 
 .login-body {
@@ -192,7 +196,7 @@ select {
   display: flex;
   align-items: center;
   gap: 12px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: flex-end;
 }
 
@@ -203,6 +207,7 @@ select {
   border: 1px solid rgba(101, 201, 240, 0.14);
   color: var(--accent-3);
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .toolbar {
@@ -338,6 +343,7 @@ select {
   padding: 13px 12px;
   border-bottom: 1px solid rgba(101, 201, 240, 0.08);
   vertical-align: middle;
+  white-space: nowrap;
 }
 
 .calendar-table th {
@@ -385,28 +391,31 @@ select {
 }
 
 .calendar-table td:nth-child(10) {
-  width: 220px;
+  width: 256px;
 }
 
 .route-name {
-  min-width: 220px;
+  min-width: 240px;
   font-weight: 700;
   color: var(--accent-3);
+  white-space: nowrap;
 }
 
 .action-stack,
 .action-row {
   display: flex;
   gap: 8px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .action-stack {
   justify-content: flex-end;
+  align-items: center;
 }
 
 .action-btn {
   min-height: 36px;
+  min-width: 72px;
   padding: 0 12px;
   font-size: 0.8rem;
   border-color: rgba(0, 160, 223, 0.4);
@@ -564,6 +573,7 @@ select {
   }
 
   .header-actions {
+    flex-wrap: wrap;
     justify-content: stretch;
   }
 
@@ -591,6 +601,7 @@ select {
   }
 
   .action-row {
+    flex-wrap: wrap;
     justify-content: stretch;
   }
 
