@@ -19,7 +19,6 @@ const els = {
   start: document.getElementById('filter-start'),
   profile: document.getElementById('filter-profile'),
   type: document.getElementById('filter-type'),
-  routeState: document.getElementById('filter-state'),
   search: document.getElementById('filter-search')
 };
 
@@ -69,7 +68,6 @@ function routeMatches(route, filters) {
   if (filters.start && route.start !== filters.start) return false;
   if (filters.profile && route.profile !== filters.profile) return false;
   if (filters.type && route.type !== filters.type) return false;
-  if (filters.state && route.status !== filters.state) return false;
   if (filters.search && !haystack.includes(filters.search)) return false;
   return true;
 }
@@ -185,8 +183,7 @@ function renderFilters(routes) {
     month: orderedMonths(routes.map((route) => route.monthName)),
     start: unique(routes.map((route) => route.start)),
     profile: unique(routes.map((route) => route.profile)),
-    type: unique(routes.map((route) => route.type)),
-    routeState: unique(routes.map((route) => route.status))
+    type: unique(routes.map((route) => route.type))
   };
 
   Object.entries(options).forEach(([key, values]) => {
@@ -203,7 +200,6 @@ function applyFilters() {
     start: els.start.value,
     profile: els.profile.value,
     type: els.type.value,
-    state: els.routeState.value,
     search: els.search.value.trim().toLowerCase()
   };
 
@@ -211,8 +207,7 @@ function applyFilters() {
     month: els.month,
     start: els.start,
     profile: els.profile,
-    type: els.type,
-    routeState: els.routeState
+    type: els.type
   }).forEach(([key, element]) => {
     element.dataset.value = element.value || 'Todos';
   });
@@ -279,8 +274,7 @@ Object.values({
   month: els.month,
   start: els.start,
   profile: els.profile,
-  type: els.type,
-  routeState: els.routeState
+  type: els.type
 }).forEach((element) => element.addEventListener('change', applyFilters));
 
 els.search.addEventListener('input', applyFilters);
