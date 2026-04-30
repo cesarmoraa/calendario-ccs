@@ -174,9 +174,9 @@ select {
 /* APP */
 
 .app-shell {
-  width: min(1680px, calc(100% - 20px));
-  margin: 14px auto;
-  padding: 24px;
+  width: min(1980px, calc(100vw - 16px));
+  margin: 10px auto;
+  padding: 18px;
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 28px;
@@ -462,14 +462,14 @@ select {
 
 .calendar-table {
   width: 100%;
-  min-width: 1280px;
+  min-width: 1180px;
   border-collapse: collapse;
   background: rgba(2, 12, 24, 0.92);
 }
 
 .calendar-table th,
 .calendar-table td {
-  padding: 13px 12px;
+  padding: 12px 10px;
   border-bottom: 1px solid rgba(101, 201, 240, 0.08);
   vertical-align: middle;
   white-space: nowrap;
@@ -492,39 +492,39 @@ select {
 }
 
 .calendar-table td:nth-child(1) {
-  width: 96px;
+  width: 88px;
 }
 
 .calendar-table td:nth-child(2) {
-  width: 130px;
+  width: 118px;
 }
 
 .calendar-table td:nth-child(4) {
-  width: 150px;
+  width: 138px;
 }
 
 .calendar-table td:nth-child(6) {
-  width: 112px;
+  width: 102px;
 }
 
 .calendar-table td:nth-child(7) {
-  width: 92px;
+  width: 84px;
 }
 
 .calendar-table td:nth-child(8) {
-  width: 126px;
+  width: 118px;
 }
 
 .calendar-table td:nth-child(9) {
-  width: 124px;
+  width: 116px;
 }
 
 .calendar-table td:nth-child(10) {
-  width: 256px;
+  width: 224px;
 }
 
 .route-name {
-  min-width: 240px;
+  min-width: 208px;
   font-weight: 700;
   color: var(--accent-3);
   white-space: nowrap;
@@ -544,8 +544,8 @@ select {
 
 .action-btn {
   min-height: 36px;
-  min-width: 72px;
-  padding: 0 12px;
+  min-width: 64px;
+  padding: 0 10px;
   font-size: 0.8rem;
   border-color: rgba(0, 160, 223, 0.4);
   background: rgba(0, 160, 223, 0.08);
