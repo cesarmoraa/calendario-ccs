@@ -118,6 +118,18 @@ function resolveExcelPath() {
   return candidates.find((candidate) => fs.existsSync(candidate)) || candidates[0];
 }
 
+function resolveExcelLabel() {
+  const excelPath = resolveExcelPath();
+  const entryName = path.basename(excelPath);
+
+  try {
+    const realName = path.basename(fs.realpathSync(excelPath));
+    return realName !== entryName ? `${entryName} -> ${realName}` : entryName;
+  } catch {
+    return entryName;
+  }
+}
+
 function resolveGpxDir() {
   const candidates = [
     path.join(ROOT_DIR, "gpx"),
@@ -1206,6 +1218,7 @@ async function handleApi(req, res, pathname) {
     if (!session) return;
     sendJson(res, 200, {
       loadedAt: state.loadedAt,
+      sourceExcel: resolveExcelLabel(),
       report: state.report,
       routes: state.routes
     });
@@ -1220,6 +1233,7 @@ async function handleApi(req, res, pathname) {
       sendJson(res, 200, {
         ok: true,
         loadedAt: state.loadedAt,
+        sourceExcel: resolveExcelLabel(),
         routes: state.routes.length
       });
     } catch (error) {

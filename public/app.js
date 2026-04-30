@@ -4,7 +4,8 @@ const state = {
   user: null,
   report: null,
   loadedAt: null,
-  accessSummary: null
+  accessSummary: null,
+  sourceExcel: ''
 };
 
 const els = {
@@ -55,6 +56,13 @@ function roleLabel(role) {
     member: 'Socio',
     view: 'Visita'
   }[role] || 'Cuenta';
+}
+
+function buildLoadStatusText(routeCount) {
+  const parts = [`Mostrando ${routeCount} rutas`];
+  if (state.loadedAt) parts.push(`actualizado ${state.loadedAt}`);
+  if (state.sourceExcel) parts.push(`fuente ${state.sourceExcel}`);
+  return parts.join(' · ');
 }
 
 function monthNameFromDate(dateText) {
@@ -286,7 +294,7 @@ function applyFilters() {
   renderMetrics(state.filteredRoutes);
   renderTable(state.filteredRoutes);
   renderCards(state.filteredRoutes);
-  els.status.textContent = `Mostrando ${state.filteredRoutes.length} rutas · actualizado ${state.loadedAt || 'recién'}`;
+  els.status.textContent = buildLoadStatusText(state.filteredRoutes.length);
 }
 
 async function fetchSession() {
@@ -314,6 +322,7 @@ async function fetchCalendar() {
   state.routes = data.routes;
   state.report = data.report;
   state.loadedAt = data.loadedAt;
+  state.sourceExcel = data.sourceExcel || '';
   renderYearToDateSummary(state.routes);
   renderFilters(state.routes);
   applyDefaultMonthFilter();
@@ -336,16 +345,20 @@ async function fetchAccessSummary() {
 
 async function refreshCalendar() {
   els.status.textContent = 'Actualizando desde Excel y GPX...';
-  const res = await fetch('/api/refresh', {
-    method: 'POST',
-    credentials: 'same-origin'
-  });
-  const data = await res.json();
-  if (!res.ok) {
-    els.status.textContent = data.error || 'No fue posible refrescar.';
-    return;
+  try {
+    const res = await fetch('/api/refresh', {
+      method: 'POST',
+      credentials: 'same-origin'
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      els.status.textContent = data.error || 'No fue posible refrescar.';
+      return;
+    }
+    await fetchCalendar();
+  } catch (error) {
+    els.status.textContent = 'No fue posible conectar con el servidor para actualizar el calendario.';
   }
-  await fetchCalendar();
 }
 
 async function logout() {
