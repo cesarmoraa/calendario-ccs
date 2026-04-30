@@ -49,6 +49,10 @@ const MONTH_ORDER = [
   'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
 ];
 
+function currentMonthName() {
+  return MONTH_ORDER[new Date().getMonth()] || '';
+}
+
 function parseRouteDate(dateText) {
   const match = String(dateText || '').trim().match(/^(\d{2})\/(\d{2})\/(\d{2}|\d{4})$/);
   if (!match) return null;
@@ -188,9 +192,13 @@ function renderFilters(routes) {
 
   Object.entries(options).forEach(([key, values]) => {
     const select = els[key];
-    const previous = select.dataset.value || 'Todos';
+    const hasPreviousValue = Object.prototype.hasOwnProperty.call(select.dataset, 'value');
+    const previous = hasPreviousValue ? (select.dataset.value || 'Todos') : 'Todos';
+    const defaultValue = key === 'month' && !hasPreviousValue && values.includes(currentMonthName())
+      ? currentMonthName()
+      : previous;
     select.innerHTML = values.map((value) => `<option value="${value === 'Todos' ? '' : value}">${value}</option>`).join('');
-    select.value = previous === 'Todos' ? '' : previous;
+    select.value = defaultValue === 'Todos' ? '' : defaultValue;
   });
 }
 
