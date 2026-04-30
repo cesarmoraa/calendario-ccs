@@ -54,6 +54,45 @@
       <span id="load-status">Cargando calendario...</span>
     </section>
 
+    <section id="admin-access-panel" class="admin-access-panel" hidden>
+      <div class="admin-access-header">
+        <div>
+          <h2>Visibilidad de accesos</h2>
+          <p>Resumen de ingresos exitosos y socios que aún no han entrado.</p>
+        </div>
+      </div>
+      <div id="admin-access-metrics" class="admin-access-metrics"></div>
+      <div class="admin-access-grid">
+        <article class="admin-access-card">
+          <div class="admin-access-card-head">
+            <h3>Quién ha ingresado</h3>
+            <span id="admin-access-count" class="admin-access-meta">0 cuentas</span>
+          </div>
+          <div class="admin-access-table-wrap">
+            <table class="admin-access-table">
+              <thead>
+                <tr>
+                  <th>Cuenta</th>
+                  <th>Tipo</th>
+                  <th>Ingresos</th>
+                  <th>Último acceso</th>
+                </tr>
+              </thead>
+              <tbody id="admin-access-body"></tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="admin-access-card">
+          <div class="admin-access-card-head">
+            <h3>Socios sin ingreso</h3>
+            <span id="admin-never-count" class="admin-access-meta">0 socios</span>
+          </div>
+          <div id="admin-never-entered" class="admin-never-entered"></div>
+        </article>
+      </div>
+    </section>
+
     <section class="desktop-table-wrap">
       <table class="calendar-table">
         <thead>

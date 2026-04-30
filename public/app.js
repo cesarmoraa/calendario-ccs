@@ -3,7 +3,8 @@ const state = {
   filteredRoutes: [],
   user: null,
   report: null,
-  loadedAt: null
+  loadedAt: null,
+  accessSummary: null
 };
 
 const els = {
@@ -11,6 +12,12 @@ const els = {
   subtitle: document.getElementById('hero-subtitle'),
   status: document.getElementById('load-status'),
   metrics: document.getElementById('metrics-grid'),
+  adminPanel: document.getElementById('admin-access-panel'),
+  adminMetrics: document.getElementById('admin-access-metrics'),
+  adminAccessCount: document.getElementById('admin-access-count'),
+  adminNeverCount: document.getElementById('admin-never-count'),
+  adminAccessBody: document.getElementById('admin-access-body'),
+  adminNeverEntered: document.getElementById('admin-never-entered'),
   body: document.getElementById('calendar-body'),
   mobile: document.getElementById('mobile-cards'),
   refresh: document.getElementById('refresh-btn'),
@@ -32,6 +39,24 @@ function fmtNumber(value, digits = 1) {
     minimumFractionDigits: digits,
     maximumFractionDigits: digits
   }).format(value);
+}
+
+function formatAccessDate(value) {
+  if (!value) return 'Sin registro';
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return 'Sin registro';
+  return new Intl.DateTimeFormat('es-CL', {
+    dateStyle: 'short',
+    timeStyle: 'short'
+  }).format(parsed);
+}
+
+function roleLabel(role) {
+  return {
+    admin: 'Admin',
+    member: 'Socio',
+    view: 'Visita'
+  }[role] || 'Cuenta';
 }
 
 function monthNameFromDate(dateText) {
@@ -136,6 +161,43 @@ function renderYearToDateSummary(routes) {
   }, { km: 0, gain: 0 });
 
   els.subtitle.textContent = `Este año llevamos ${fmtNumber(totals.km, 1)} km y ${fmtNumber(totals.gain, 0)} m de altimetría acumulada.`;
+}
+
+function renderAccessSummary(summary) {
+  if (!els.adminPanel) return;
+  if (!summary || state.user?.role !== 'admin') {
+    els.adminPanel.hidden = true;
+    return;
+  }
+
+  const cards = [
+    ['Ingresos exitosos', summary.totals.successfulLogins],
+    ['Cuentas con ingreso', summary.totals.accountsWithAccess],
+    ['Socios sin ingreso', summary.totals.membersNeverEntered]
+  ];
+
+  els.adminMetrics.innerHTML = cards
+    .map(([label, value]) => `<article class="admin-access-metric"><span>${label}</span><strong>${value}</strong></article>`)
+    .join('');
+
+  els.adminAccessCount.textContent = `${summary.accounts.length} cuentas`;
+  els.adminAccessBody.innerHTML = summary.accounts.length
+    ? summary.accounts.map((entry) => `
+      <tr>
+        <td>${entry.name || 'Sin nombre'}</td>
+        <td>${roleLabel(entry.role)}</td>
+        <td>${entry.count}</td>
+        <td>${formatAccessDate(entry.lastAccess)}</td>
+      </tr>
+    `).join('')
+    : '<tr><td colspan="4">Todavía no hay ingresos exitosos registrados.</td></tr>';
+
+  els.adminNeverCount.textContent = `${summary.neverEntered.length} socios`;
+  els.adminNeverEntered.innerHTML = summary.neverEntered.length
+    ? summary.neverEntered.map((entry) => `<span class="admin-never-chip">${entry.name}</span>`).join('')
+    : '<p class="admin-empty">Todos los socios ya registran al menos un ingreso.</p>';
+
+  els.adminPanel.hidden = false;
 }
 
 function renderTable(routes) {
@@ -246,6 +308,7 @@ async function fetchSession() {
   const firstName = firstNameFromFullName(state.user.name);
   els.welcome.textContent = `Hola, ${firstName}`;
   els.refresh.hidden = state.user.role !== 'admin';
+  if (els.adminPanel) els.adminPanel.hidden = state.user.role !== 'admin';
 }
 
 async function fetchCalendar() {
@@ -263,6 +326,20 @@ async function fetchCalendar() {
   renderFilters(state.routes);
   applyDefaultMonthFilter();
   applyFilters();
+  if (state.user?.role === 'admin') {
+    await fetchAccessSummary();
+  }
+}
+
+async function fetchAccessSummary() {
+  const res = await fetch('/api/access-summary', { credentials: 'same-origin' });
+  if (!res.ok) {
+    renderAccessSummary(null);
+    return;
+  }
+  const data = await res.json();
+  state.accessSummary = data;
+  renderAccessSummary(state.accessSummary);
 }
 
 async function refreshCalendar() {

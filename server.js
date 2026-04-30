@@ -976,11 +976,85 @@ function registerAccess(req, meta) {
   appendAccessLog({
     nombre: meta.name || "",
     rut: meta.rut || "",
+    role: meta.role || "",
     fecha_hora: new Date().toISOString(),
     user_agent: req.headers["user-agent"] || "",
     ip: clientIp(req),
     resultado: meta.result
   });
+}
+
+function inferAccessRole(entry) {
+  if (entry.role) return entry.role;
+  if (entry.rut === ADMIN_CREDENTIALS.rut) return "admin";
+  if (VIEWER_CREDENTIALS.some((viewer) => viewer.rut === entry.rut)) return "view";
+  if (entry.rut) return "member";
+  return "";
+}
+
+function summarizeAccessLog(logEntries, users) {
+  const successfulEntries = logEntries.filter((entry) => entry && entry.result === "ok");
+  const byAccount = new Map();
+
+  for (const entry of successfulEntries) {
+    const rut = String(entry.rut || "").trim();
+    const name = String(entry.nombre || "").trim();
+    const role = inferAccessRole(entry);
+    const key = rut || name.toLowerCase();
+    if (!key) continue;
+
+    const timestamp = Date.parse(entry.fecha_hora || "");
+    const current = byAccount.get(key) || {
+      name,
+      rut,
+      role,
+      count: 0,
+      lastAccess: "",
+      lastAccessTs: 0
+    };
+
+    current.count += 1;
+    current.name = current.name || name;
+    current.rut = current.rut || rut;
+    current.role = current.role || role;
+    if (!Number.isNaN(timestamp) && timestamp >= current.lastAccessTs) {
+      current.lastAccess = entry.fecha_hora || "";
+      current.lastAccessTs = timestamp;
+    }
+
+    byAccount.set(key, current);
+  }
+
+  const accounts = Array.from(byAccount.values())
+    .sort((left, right) => {
+      if (right.lastAccessTs !== left.lastAccessTs) return right.lastAccessTs - left.lastAccessTs;
+      return right.count - left.count;
+    })
+    .map(({ lastAccessTs, ...entry }) => entry);
+
+  const enteredMemberRuts = new Set(
+    accounts
+      .filter((entry) => entry.role === "member" && entry.rut)
+      .map((entry) => entry.rut)
+  );
+
+  const neverEntered = users
+    .filter((user) => user && user.rut && !enteredMemberRuts.has(user.rut))
+    .map((user) => ({
+      name: user.name,
+      rut: user.rut
+    }))
+    .sort((left, right) => left.name.localeCompare(right.name, "es"));
+
+  return {
+    totals: {
+      successfulLogins: successfulEntries.length,
+      accountsWithAccess: accounts.length,
+      membersNeverEntered: neverEntered.length
+    },
+    accounts,
+    neverEntered
+  };
 }
 
 function validatePin(username, password) {
@@ -1100,6 +1174,7 @@ async function handleApi(req, res, pathname) {
       registerAccess(req, {
         name: validation.user.name,
         rut: validation.user.rut,
+        role: validation.user.role,
         result: "ok"
       });
       sendJson(
@@ -1157,6 +1232,14 @@ async function handleApi(req, res, pathname) {
     const session = requireAdminSession(req, res);
     if (!session) return;
     sendJson(res, 200, safeReadJson(ACCESS_LOG_PATH, []));
+    return;
+  }
+
+  if (pathname === "/api/access-summary" && req.method === "GET") {
+    const session = requireAdminSession(req, res);
+    if (!session) return;
+    const log = safeReadJson(ACCESS_LOG_PATH, []);
+    sendJson(res, 200, summarizeAccessLog(log, state.users));
     return;
   }
 

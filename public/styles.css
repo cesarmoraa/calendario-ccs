@@ -305,6 +305,128 @@ select {
   color: var(--accent-3);
 }
 
+.admin-access-panel {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(101, 201, 240, 0.14);
+  background: linear-gradient(180deg, rgba(8, 28, 52, 0.9), rgba(5, 20, 39, 0.94));
+}
+
+.admin-access-header h2,
+.admin-access-card h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--accent-3);
+}
+
+.admin-access-header p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.admin-access-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.admin-access-metric,
+.admin-access-card {
+  border-radius: 18px;
+  border: 1px solid rgba(101, 201, 240, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.admin-access-metric {
+  display: grid;
+  gap: 4px;
+  min-height: 82px;
+  padding: 14px 16px;
+}
+
+.admin-access-metric span,
+.admin-access-meta,
+.admin-empty {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.admin-access-metric strong {
+  font-size: 1.6rem;
+  line-height: 1.05;
+}
+
+.admin-access-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: 12px;
+}
+
+.admin-access-card {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+}
+
+.admin-access-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-access-table-wrap {
+  overflow: auto;
+  border-radius: 16px;
+  border: 1px solid rgba(101, 201, 240, 0.1);
+}
+
+.admin-access-table {
+  width: 100%;
+  min-width: 520px;
+  border-collapse: collapse;
+}
+
+.admin-access-table th,
+.admin-access-table td {
+  padding: 11px 12px;
+  border-bottom: 1px solid rgba(101, 201, 240, 0.08);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.admin-access-table th {
+  background: rgba(0, 160, 223, 0.12);
+  color: var(--accent-2);
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+}
+
+.admin-never-entered {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.admin-never-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(101, 201, 240, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--accent-3);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
 /* BUTTONS */
 
 .primary-btn,
@@ -583,6 +705,11 @@ select {
 
   .metrics-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .admin-access-metrics,
+  .admin-access-grid {
+    grid-template-columns: 1fr;
   }
 }
 
