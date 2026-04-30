@@ -109,6 +109,14 @@ function resolveGpxDir() {
   return candidates.find((candidate) => fs.existsSync(candidate)) || candidates[0];
 }
 
+function resolveTcxDir() {
+  const candidates = [
+    path.join(ROOT_DIR, "tcx"),
+    path.join(ROOT_DIR, "TCX")
+  ];
+  return candidates.find((candidate) => fs.existsSync(candidate)) || candidates[0];
+}
+
 function readZipEntry(zipPath, entryPath) {
   return execFileSync("unzip", ["-p", zipPath, entryPath], {
     cwd: ROOT_DIR,
@@ -309,6 +317,17 @@ function formatElevation(elevationGain) {
   return typeof elevationGain === "number" ? `${Math.round(elevationGain)} m` : "Por definir";
 }
 
+function formatDuration(totalSeconds) {
+  if (typeof totalSeconds !== "number" || !Number.isFinite(totalSeconds) || totalSeconds <= 0) {
+    return "Por definir";
+  }
+  const rounded = Math.round(totalSeconds);
+  const hours = Math.floor(rounded / 3600);
+  const minutes = Math.floor((rounded % 3600) / 60);
+  const seconds = rounded % 60;
+  return `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
+
 function nonEmptyValue(value) {
   const text = normalizeString(value);
   if (!text) return "Por definir";
@@ -368,12 +387,12 @@ function cellRefForHeader(row, headerMap, headerName) {
   return null;
 }
 
-function getGpxFileIndex(gpxDir) {
-  const files = fs.existsSync(gpxDir) ? fs.readdirSync(gpxDir) : [];
+function getFileIndex(baseDir) {
+  const files = fs.existsSync(baseDir) ? fs.readdirSync(baseDir) : [];
   const map = new Map();
 
   for (const file of files) {
-    const fullPath = path.join(gpxDir, file);
+    const fullPath = path.join(baseDir, file);
     if (!fs.statSync(fullPath).isFile()) continue;
     const key = normalizeKey(file);
     map.set(key, fullPath);
@@ -393,6 +412,16 @@ function getGpxFileIndex(gpxDir) {
       return null;
     }
   };
+}
+
+function getSiblingFileName(fileName, extension) {
+  const source = normalizeString(fileName);
+  if (!source || source === "Por definir") return "";
+  const extWithDot = extension.startsWith(".") ? extension : `.${extension}`;
+  if (/\.[a-z0-9]+$/i.test(source)) {
+    return source.replace(/\.[a-z0-9]+$/i, extWithDot);
+  }
+  return `${source}${extWithDot}`;
 }
 
 function haversineKm(lat1, lon1, lat2, lon2) {
@@ -452,6 +481,57 @@ function parseGpx(filePath) {
     elevationGain,
     startLat: points[0].lat,
     startLon: points[0].lon
+  };
+}
+
+function parseTcx(filePath) {
+  const xml = fs.readFileSync(filePath, "utf8");
+  const totalTimeMatch = xml.match(/<TotalTimeSeconds>([\d.]+)<\/TotalTimeSeconds>/);
+  const lapDistanceMatch = xml.match(/<Lap>[\s\S]*?<DistanceMeters>([\d.]+)<\/DistanceMeters>/);
+  const trackpointRegex = /<Trackpoint>([\s\S]*?)<\/Trackpoint>/g;
+  const points = [];
+
+  for (const match of xml.matchAll(trackpointRegex)) {
+    const block = match[1];
+    const latMatch = block.match(/<LatitudeDegrees>([-\d.]+)<\/LatitudeDegrees>/);
+    const lonMatch = block.match(/<LongitudeDegrees>([-\d.]+)<\/LongitudeDegrees>/);
+    const eleMatch = block.match(/<AltitudeMeters>([-\d.]+)<\/AltitudeMeters>/);
+    const distanceMatch = block.match(/<DistanceMeters>([\d.]+)<\/DistanceMeters>/);
+    const lat = Number.parseFloat(latMatch ? latMatch[1] : "");
+    const lon = Number.parseFloat(lonMatch ? lonMatch[1] : "");
+    const ele = Number.parseFloat(eleMatch ? eleMatch[1] : "");
+    const distanceMeters = Number.parseFloat(distanceMatch ? distanceMatch[1] : "");
+    points.push({
+      lat: Number.isFinite(lat) ? lat : null,
+      lon: Number.isFinite(lon) ? lon : null,
+      ele: Number.isFinite(ele) ? ele : null,
+      distanceMeters: Number.isFinite(distanceMeters) ? distanceMeters : null
+    });
+  }
+
+  let elevationGain = 0;
+  for (let index = 1; index < points.length; index += 1) {
+    const prev = points[index - 1];
+    const current = points[index];
+    if (prev.ele === null || current.ele === null) continue;
+    const delta = current.ele - prev.ele;
+    if (delta > 0) elevationGain += delta;
+  }
+
+  const firstPointWithPosition = points.find((point) => point.lat !== null && point.lon !== null) || null;
+  const lastPointWithDistance = [...points].reverse().find((point) => point.distanceMeters !== null) || null;
+  const distanceKmFromLap = totalTimeMatch && lapDistanceMatch
+    ? Number.parseFloat(lapDistanceMatch[1]) / 1000
+    : null;
+  const distanceKmFromTrack = lastPointWithDistance ? lastPointWithDistance.distanceMeters / 1000 : null;
+
+  return {
+    totalSeconds: totalTimeMatch ? Number.parseFloat(totalTimeMatch[1]) : null,
+    timeText: totalTimeMatch ? formatDuration(Number.parseFloat(totalTimeMatch[1])) : "Por definir",
+    distanceKm: Number.isFinite(distanceKmFromLap) ? distanceKmFromLap : distanceKmFromTrack,
+    elevationGain: points.length ? elevationGain : null,
+    startLat: firstPointWithPosition ? firstPointWithPosition.lat : null,
+    startLon: firstPointWithPosition ? firstPointWithPosition.lon : null
   };
 }
 
@@ -544,6 +624,7 @@ function trimRouteName(value) {
 function parseWorkbookData() {
   const excelPath = resolveExcelPath();
   const gpxDir = resolveGpxDir();
+  const tcxDir = resolveTcxDir();
   const { sheets, sharedStrings } = readWorkbookStructure(excelPath);
   const routeSheet = findSheetByName(sheets, ["RUTAS", "HOJA RUTAS", "Template_Calendario_CCS"], 0);
   const userSheet = findSheetByName(sheets, ["USUARIOS", "USERS", "Usuarios"], 1);
@@ -561,7 +642,8 @@ function parseWorkbookData() {
 
   const userSheetXml = readZipEntry(excelPath, userSheet.target);
   const userRows = parseWorksheetRows(userSheetXml, sharedStrings);
-  const gpxIndex = getGpxFileIndex(gpxDir);
+  const gpxIndex = getFileIndex(gpxDir);
+  const tcxIndex = getFileIndex(tcxDir);
 
   const routeHeaderMap = buildHeaderMap(routeRows[0]);
   const userHeaderMap = buildHeaderMap(userRows[0]);
@@ -610,6 +692,15 @@ function parseWorkbookData() {
       startLat: null,
       startLon: null
     };
+    let tcxPath = null;
+    let tcxData = {
+      totalSeconds: null,
+      timeText: "Por definir",
+      distanceKm: null,
+      elevationGain: null,
+      startLat: null,
+      startLon: null
+    };
 
     if (gpxFile === "Por definir") {
       report.routesWithoutGpx.push(`${formatDate(date)} · ${routeName}`);
@@ -622,11 +713,24 @@ function parseWorkbookData() {
       }
     }
 
-    const mapsUrl = buildMapsLink(mapsRaw, gpxData.startLat, gpxData.startLon);
-    const wazeUrl = buildWazeLink(wazeRaw, gpxData.startLat, gpxData.startLon);
-    const profile = deriveProfile(profileRaw, gpxData.elevationGain);
-    const distanceText = formatDistance(gpxData.distanceKm);
-    const elevationText = formatElevation(gpxData.elevationGain);
+    const tcxCandidate = getSiblingFileName(gpxFile, ".tcx") || getSiblingFileName(routeName, ".tcx");
+    if (tcxCandidate) {
+      tcxPath = tcxIndex.resolve(tcxCandidate);
+      if (tcxPath) {
+        tcxData = parseTcx(tcxPath);
+      }
+    }
+
+    const resolvedLat = tcxData.startLat ?? gpxData.startLat;
+    const resolvedLon = tcxData.startLon ?? gpxData.startLon;
+    const resolvedDistanceKm = tcxData.distanceKm ?? gpxData.distanceKm;
+    const resolvedElevationGain = tcxData.elevationGain ?? gpxData.elevationGain;
+    const resolvedTimeText = timeText !== "Por definir" ? timeText : tcxData.timeText;
+    const mapsUrl = buildMapsLink(mapsRaw, resolvedLat, resolvedLon);
+    const wazeUrl = buildWazeLink(wazeRaw, resolvedLat, resolvedLon);
+    const profile = deriveProfile(profileRaw, resolvedElevationGain);
+    const distanceText = formatDistance(resolvedDistanceKm);
+    const elevationText = formatElevation(resolvedElevationGain);
 
     routes.push(formatRouteForOutput({
       id: `route-${row.index}`,
@@ -637,18 +741,19 @@ function parseWorkbookData() {
       route: routeName,
       start,
       profile,
-      distanceKm: gpxData.distanceKm,
+      distanceKm: resolvedDistanceKm,
       distanceText,
-      elevationGain: gpxData.elevationGain,
+      elevationGain: resolvedElevationGain,
       elevationText,
-      timeText,
+      timeText: resolvedTimeText,
       stravaUrl: stravaUrl || "Por definir",
       mapsUrl,
       wazeUrl,
       gpxFile: gpxFile === "Por definir" ? null : gpxFile,
       gpxResolvedPath: gpxPath ? path.basename(gpxPath) : null,
-      latitude: gpxData.startLat,
-      longitude: gpxData.startLon
+      tcxResolvedPath: tcxPath ? path.basename(tcxPath) : null,
+      latitude: resolvedLat,
+      longitude: resolvedLon
     }));
   }
 
