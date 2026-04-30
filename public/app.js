@@ -53,6 +53,18 @@ function currentMonthName() {
   return MONTH_ORDER[new Date().getMonth()] || '';
 }
 
+function applyDefaultMonthFilter() {
+  if (!els.month || els.month.dataset.initialized === 'true') return;
+
+  const month = currentMonthName();
+  const availableValues = Array.from(els.month.options).map((option) => option.value);
+  if (availableValues.includes(month)) {
+    els.month.value = month;
+  }
+
+  els.month.dataset.initialized = 'true';
+}
+
 function parseRouteDate(dateText) {
   const match = String(dateText || '').trim().match(/^(\d{2})\/(\d{2})\/(\d{2}|\d{4})$/);
   if (!match) return null;
@@ -192,13 +204,9 @@ function renderFilters(routes) {
 
   Object.entries(options).forEach(([key, values]) => {
     const select = els[key];
-    const hasPreviousValue = Object.prototype.hasOwnProperty.call(select.dataset, 'value');
-    const previous = hasPreviousValue ? (select.dataset.value || 'Todos') : 'Todos';
-    const defaultValue = key === 'month' && !hasPreviousValue && values.includes(currentMonthName())
-      ? currentMonthName()
-      : previous;
+    const previous = select.dataset.value || 'Todos';
     select.innerHTML = values.map((value) => `<option value="${value === 'Todos' ? '' : value}">${value}</option>`).join('');
-    select.value = defaultValue === 'Todos' ? '' : defaultValue;
+    select.value = previous === 'Todos' ? '' : previous;
   });
 }
 
@@ -253,6 +261,7 @@ async function fetchCalendar() {
   state.loadedAt = data.loadedAt;
   renderYearToDateSummary(state.routes);
   renderFilters(state.routes);
+  applyDefaultMonthFilter();
   applyFilters();
 }
 
