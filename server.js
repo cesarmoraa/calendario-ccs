@@ -130,6 +130,28 @@ function resolveExcelLabel() {
   }
 }
 
+function fileModifiedTimeMs(filePath) {
+  try {
+    return fs.statSync(filePath).mtimeMs;
+  } catch {
+    return 0;
+  }
+}
+
+function currentExcelModifiedTimeMs() {
+  const excelPath = resolveExcelPath();
+  try {
+    const realExcelPath = fs.realpathSync(excelPath);
+    return fileModifiedTimeMs(realExcelPath);
+  } catch {
+    return fileModifiedTimeMs(excelPath);
+  }
+}
+
+function processedDataModifiedTimeMs() {
+  return fileModifiedTimeMs(ROUTES_JSON_PATH);
+}
+
 function resolveGpxDir() {
   const candidates = [
     path.join(ROOT_DIR, "gpx"),
@@ -902,6 +924,12 @@ async function refreshData() {
   persistProcessedData();
 }
 
+async function ensureFreshData() {
+  if (currentExcelModifiedTimeMs() > processedDataModifiedTimeMs()) {
+    await refreshData();
+  }
+}
+
 function getCookies(req) {
   const header = req.headers.cookie || "";
   return header.split(";").reduce((acc, chunk) => {
@@ -1216,6 +1244,7 @@ async function handleApi(req, res, pathname) {
   if (pathname === "/api/calendar" && req.method === "GET") {
     const session = requireSession(req, res);
     if (!session) return;
+    await ensureFreshData();
     sendJson(res, 200, {
       loadedAt: state.loadedAt,
       sourceExcel: resolveExcelLabel(),
