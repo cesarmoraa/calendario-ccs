@@ -218,6 +218,25 @@ Commits relevantes:
 - `87bf7af` automatiza publicacion desde refresh local
 - `ee1f5b8` permite gpx y tcx en una sola carpeta
 
+### Fase 10. Endurecimiento del flujo de publicación y layout desktop
+- corrección del auto-publish cuando había archivos no relacionados ya preparados en Git
+- corrección de detección de carpetas por case en macOS
+- aclaración del mensaje del banner cuando sí refresca pero no había cambios fuente para publicar
+- validación real del flujo:
+  - editar Excel
+  - guardar
+  - refrescar en `localhost`
+  - generar commit automático
+  - empujar a GitHub
+  - esperar despliegue de Render
+- ajuste del ancho del layout desktop para reducir scroll horizontal en pantallas amplias
+
+Commits relevantes:
+- `92b3797` corrige auto publish del refresh local
+- `5020dc6` aclara estado del refresh local
+- `1597c1b` publica cambios de calendario 2026-04-30 13:43
+- `c22677c` ensancha layout desktop del calendario
+
 ---
 
 ## Errores / Fricciones Reales del Proyecto
@@ -257,6 +276,42 @@ Problema:
 
 Aprendizaje:
 - si el registro histórico importa realmente, no basta un JSON local en hosting efímero
+
+### 5. Auto-publish bloqueado por stage ajeno
+Problema:
+- el botón local de refresh estaba saltándose la publicación automática cuando encontraba cualquier archivo ya staged, aunque no fuera parte de Excel, GPX o TCX
+
+Aprendizaje:
+- el flujo automático debe aislar su propio alcance y no bloquearse por cambios de documentación, datos generados u otros archivos ajenos al publish de rutas
+
+Aplicación futura:
+- cuando se automatice `git add/commit/push`, limitar explícitamente el scope de archivos afectados
+
+### 6. Case-insensitive FS vs pathspec de Git
+Problema:
+- en macOS, `fs.existsSync('gpx')` puede devolver `true` aunque la carpeta real sea `GPX`, pero Git luego falla al hacer commit con el case equivocado
+
+Aprendizaje:
+- para automatizaciones con Git en macOS no basta preguntar por existencia; conviene resolver el nombre real visible en el directorio
+
+Aplicación futura:
+- en cualquier script de publicación, usar nombres reales de carpeta/archivo antes de construir pathspecs
+
+### 7. Mensajes de estado ambiguos
+Problema:
+- el banner de refresh mostraba “No fue posible preparar archivos fuente para publicar” en casos donde en realidad simplemente no había cambios nuevos
+
+Aprendizaje:
+- en flujos automáticos, diferenciar con claridad entre:
+  - error real
+  - no-op legítimo
+  - publicación exitosa
+
+Aplicación futura:
+- diseñar siempre estados de interfaz que indiquen si el sistema:
+  - leyó cambios
+  - publicó cambios
+  - no encontró nada nuevo
 
 Aplicación futura:
 - usar SQLite o una base persistente para auditoría real
