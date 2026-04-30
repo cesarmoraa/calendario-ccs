@@ -203,6 +203,21 @@ Commits relevantes:
 Commits relevantes:
 - `9c71f9a` actualiza password del admin
 
+### Fase 9. Sincronización local hacia producción
+- `Actualizar calendario` en `localhost` no solo refresca datos
+- también debe:
+  - releer Excel
+  - releer GPX/TCX
+  - regenerar JSON
+  - detectar cambios fuente
+  - hacer `git add`, `commit` y `push` automáticamente si hay cambios publicables
+- la publicación automática se limita al flujo local para que Render pueda tomar los cambios desde GitHub
+- soporte para usar `GPX` y `TCX` en una sola carpeta, preferentemente `GPX/`
+
+Commits relevantes:
+- `87bf7af` automatiza publicacion desde refresh local
+- `ee1f5b8` permite gpx y tcx en una sola carpeta
+
 ---
 
 ## Errores / Fricciones Reales del Proyecto

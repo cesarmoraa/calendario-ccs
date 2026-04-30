@@ -239,7 +239,7 @@ function listPreStagedFiles() {
 }
 
 function stagePublishableSources() {
-  const publishScopes = ["calendario.xlsx", "Template_Calendario_CCS_GPX.xlsx", "GPX", "gpx", "TCX", "tcx"];
+  const publishScopes = existingPublishScopes();
 
   execFileSync("git", ["add", "-A", "--", ...publishScopes], {
     cwd: ROOT_DIR,
@@ -248,16 +248,14 @@ function stagePublishableSources() {
   });
 }
 
-function autoPublishSourceChanges() {
-  const preStagedFiles = listPreStagedFiles();
-  if (preStagedFiles.length) {
-    return {
-      published: false,
-      skipped: true,
-      reason: "Hay cambios ya preparados en Git. Publica o limpia el stage actual antes de usar la publicación automática."
-    };
-  }
+function existingPublishScopes() {
+  const candidates = ["calendario.xlsx", "Template_Calendario_CCS_GPX.xlsx", "GPX", "gpx", "TCX", "tcx"];
+  const rootEntries = new Set(fs.readdirSync(ROOT_DIR));
+  return candidates.filter((entry) => rootEntries.has(entry));
+}
 
+function autoPublishSourceChanges() {
+  const publishScopes = existingPublishScopes();
   stagePublishableSources();
 
   const stagedSources = listPreStagedFiles().filter(isPublishableSourcePath);
@@ -280,7 +278,7 @@ function autoPublishSourceChanges() {
     .format(new Date())
     .replace(",", "");
 
-  execFileSync("git", ["commit", "-m", `publica cambios de calendario ${timestamp}`], {
+  execFileSync("git", ["commit", "-m", `publica cambios de calendario ${timestamp}`, "--", ...publishScopes], {
     cwd: ROOT_DIR,
     encoding: "utf8",
     maxBuffer: 4 * 1024 * 1024
