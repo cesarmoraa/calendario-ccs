@@ -1215,6 +1215,7 @@ async function handleApi(req, res, pathname) {
 
   if (pathname === "/api/login" && req.method === "POST") {
     try {
+      await ensureFreshData();
       const body = await readBody(req);
       const validation = validateCredentials(body.username, body.password);
       if (!validation.ok) {
