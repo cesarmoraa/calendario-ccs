@@ -15,7 +15,7 @@ const SESSION_COOKIE = "ccs_session";
 const PORT = Number(process.env.PORT || 3000);
 const ADMIN_CREDENTIALS = {
   username: "admin",
-  password: "ccs2026$",
+  password: "Lider0001$",
   name: "Administrador CCS",
   rut: "admin-master",
   role: "admin"
