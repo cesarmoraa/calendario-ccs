@@ -240,16 +240,16 @@ select {
 .metrics-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 14px;
-  margin-top: 16px;
+  gap: 10px;
+  margin-top: 14px;
 }
 
 .metric-card {
   display: grid;
-  gap: 6px;
-  min-height: 116px;
-  padding: 18px;
-  border-radius: 20px;
+  gap: 4px;
+  min-height: 88px;
+  padding: 14px 16px;
+  border-radius: 18px;
   border: 1px solid rgba(101, 201, 240, 0.12);
   background:
     linear-gradient(180deg, rgba(12, 37, 69, 0.9), rgba(5, 20, 39, 0.94));
@@ -257,21 +257,48 @@ select {
 
 .metric-card span {
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 0.82rem;
+  line-height: 1.2;
 }
 
 .metric-card strong {
-  font-size: clamp(1.6rem, 3vw, 2.3rem);
-  letter-spacing: -0.04em;
+  font-size: clamp(1.2rem, 2vw, 1.9rem);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
 }
 
 .metric-wide {
   grid-column: span 2;
 }
 
+.metric-mix {
+  align-content: center;
+}
+
+.metric-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.metric-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(101, 201, 240, 0.16);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--accent-3);
+  font-size: 0.95rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
 .status-banner {
-  margin-top: 16px;
-  padding: 14px 16px;
+  margin-top: 14px;
+  padding: 12px 16px;
   border-radius: 16px;
   border: 1px solid rgba(101, 201, 240, 0.14);
   background: rgba(0, 160, 223, 0.08);

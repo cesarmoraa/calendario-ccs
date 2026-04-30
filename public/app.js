@@ -76,13 +76,13 @@ function renderMetrics(routes) {
     ['Por definir', pending]
   ];
 
-  const mixText = Object.entries(counts)
-    .map(([key, value]) => `${value} × ${key}`)
-    .join(' · ') || 'Sin datos';
+  const mixMarkup = Object.entries(counts)
+    .map(([key, value]) => `<span class="metric-chip">${value} × ${key}</span>`)
+    .join('') || '<span class="metric-chip">Sin datos</span>';
 
   els.metrics.innerHTML = cards
     .map(([title, value]) => `<article class="metric-card"><span>${title}</span><strong>${value}</strong></article>`)
-    .join('') + `<article class="metric-card metric-wide"><span>Mix de perfiles</span><strong>${mixText}</strong></article>`;
+    .join('') + `<article class="metric-card metric-wide metric-mix"><span>Mix de perfiles</span><div class="metric-chip-row">${mixMarkup}</div></article>`;
 }
 
 function renderTable(routes) {
