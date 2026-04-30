@@ -20,6 +20,7 @@ const ADMIN_CREDENTIALS = {
   rut: "admin-master",
   role: "admin"
 };
+const INVALID_LOGIN_ERROR = "No fue posible validar el acceso.";
 
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -970,15 +971,15 @@ function validatePin(username, password) {
   const userPin = String(username || "").trim();
   const passwordPin = String(password || "").trim();
   if (!/^\d{4}$/.test(userPin) || userPin !== passwordPin) {
-    return { ok: false, error: "Debes ingresar 4 dígitos iguales en usuario y password." };
+    return { ok: false, error: INVALID_LOGIN_ERROR };
   }
 
   const candidates = state.usersByPin.get(userPin) || [];
   if (!candidates.length) {
-    return { ok: false, error: "No existe un socio activo con ese PIN." };
+    return { ok: false, error: INVALID_LOGIN_ERROR };
   }
   if (candidates.length > 1) {
-    return { ok: false, error: "PIN duplicado en la base. Contacta al administrador." };
+    return { ok: false, error: INVALID_LOGIN_ERROR };
   }
 
   return {
@@ -996,7 +997,7 @@ function validateCredentials(username, password) {
 
   if (normalizedUsername === ADMIN_CREDENTIALS.username) {
     if (normalizedPassword !== ADMIN_CREDENTIALS.password) {
-      return { ok: false, error: "Credenciales de administrador inválidas." };
+      return { ok: false, error: INVALID_LOGIN_ERROR };
     }
 
     return {
