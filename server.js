@@ -61,6 +61,9 @@ const state = {
   reportText: ""
 };
 
+const PUBLISHABLE_SOURCE_EXTENSIONS = new Set([".xlsx", ".gpx", ".tcx"]);
+const PUBLISHABLE_SOURCE_BASENAMES = new Set(["calendario.xlsx", "template_calendario_ccs_gpx.xlsx"]);
+
 function ensureDataFiles() {
   fs.mkdirSync(DATA_DIR, { recursive: true });
   if (!fs.existsSync(ACCESS_LOG_PATH)) fs.writeFileSync(ACCESS_LOG_PATH, "[]\n");
@@ -186,6 +189,146 @@ function resolveTcxDir() {
     path.join(ROOT_DIR, "TCX")
   ];
   return candidates.find((candidate) => fs.existsSync(candidate)) || candidates[0];
+}
+
+function requestHostName(req) {
+  return String(req.headers.host || "")
+    .split(":")[0]
+    .trim()
+    .toLowerCase();
+}
+
+function isLocalRequest(req) {
+  const host = requestHostName(req);
+  return host === "localhost" || host === "127.0.0.1" || host === "::1" || host === "[::1]";
+}
+
+function isPublishableSourcePath(relativePath) {
+  if (!relativePath) return false;
+
+  const normalized = String(relativePath).trim().replace(/\\/g, "/");
+  const basename = path.basename(normalized).toLowerCase();
+
+  if (!basename || basename === ".ds_store" || basename.startsWith("~$")) return false;
+
+  const extension = path.extname(basename).toLowerCase();
+  if (PUBLISHABLE_SOURCE_EXTENSIONS.has(extension)) return true;
+
+  if (PUBLISHABLE_SOURCE_BASENAMES.has(basename)) return true;
+
+  return normalized.startsWith("GPX/") || normalized.startsWith("gpx/") || normalized.startsWith("TCX/") || normalized.startsWith("tcx/");
+}
+
+function listPreStagedFiles() {
+  const output = execFileSync("git", ["diff", "--cached", "--name-only"], {
+    cwd: ROOT_DIR,
+    encoding: "utf8",
+    maxBuffer: 4 * 1024 * 1024
+  });
+
+  return output
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
+function listChangedPublishableSources() {
+  const output = execFileSync(
+    "git",
+    ["status", "--porcelain", "--untracked-files=all", "--", "calendario.xlsx", "Template_Calendario_CCS_GPX.xlsx", "GPX", "gpx", "TCX", "tcx"],
+    {
+      cwd: ROOT_DIR,
+      encoding: "utf8",
+      maxBuffer: 4 * 1024 * 1024
+    }
+  );
+
+  const paths = new Set();
+
+  for (const rawLine of output.split(/\r?\n/)) {
+    const line = rawLine.trimEnd();
+    if (!line) continue;
+
+    const payload = line.slice(3).trim();
+    const relativePath = payload.includes(" -> ") ? payload.split(" -> ").pop().trim() : payload;
+
+    if (isPublishableSourcePath(relativePath)) {
+      paths.add(relativePath);
+    }
+  }
+
+  return Array.from(paths).sort();
+}
+
+function autoPublishSourceChanges() {
+  const preStagedFiles = listPreStagedFiles();
+  if (preStagedFiles.length) {
+    return {
+      published: false,
+      skipped: true,
+      reason: "Hay cambios ya preparados en Git. Publica o limpia el stage actual antes de usar la publicación automática."
+    };
+  }
+
+  const changedSources = listChangedPublishableSources();
+  if (!changedSources.length) {
+    return {
+      published: false,
+      skipped: true,
+      reason: "No había cambios de Excel, GPX o TCX pendientes para publicar."
+    };
+  }
+
+  execFileSync("git", ["add", "-A", "--", ...changedSources], {
+    cwd: ROOT_DIR,
+    encoding: "utf8",
+    maxBuffer: 4 * 1024 * 1024
+  });
+
+  const stagedSources = listPreStagedFiles().filter(isPublishableSourcePath);
+  if (!stagedSources.length) {
+    return {
+      published: false,
+      skipped: true,
+      reason: "No fue posible preparar archivos fuente para publicar."
+    };
+  }
+
+  const timestamp = new Intl.DateTimeFormat("sv-SE", {
+    timeZone: "America/Santiago",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit"
+  })
+    .format(new Date())
+    .replace(",", "");
+
+  execFileSync("git", ["commit", "-m", `publica cambios de calendario ${timestamp}`], {
+    cwd: ROOT_DIR,
+    encoding: "utf8",
+    maxBuffer: 4 * 1024 * 1024
+  });
+
+  execFileSync("git", ["push", "origin", "main"], {
+    cwd: ROOT_DIR,
+    encoding: "utf8",
+    maxBuffer: 8 * 1024 * 1024
+  });
+
+  const commitHash = execFileSync("git", ["rev-parse", "--short", "HEAD"], {
+    cwd: ROOT_DIR,
+    encoding: "utf8",
+    maxBuffer: 1024 * 1024
+  }).trim();
+
+  return {
+    published: true,
+    skipped: false,
+    commit: commitHash,
+    files: stagedSources
+  };
 }
 
 function readZipEntry(zipPath, entryPath) {
@@ -1280,11 +1423,19 @@ async function handleApi(req, res, pathname) {
     if (!session) return;
     try {
       await refreshData();
+      const publish = isLocalRequest(req)
+        ? autoPublishSourceChanges()
+        : {
+            published: false,
+            skipped: true,
+            reason: "La publicación automática solo está disponible desde localhost."
+          };
       sendJson(res, 200, {
         ok: true,
         loadedAt: state.loadedAt,
         sourceExcel: resolveExcelLabel(),
-        routes: state.routes.length
+        routes: state.routes.length,
+        publish
       });
     } catch (error) {
       sendJson(res, 500, { error: error.message || "No fue posible actualizar el calendario." });

@@ -5,7 +5,8 @@ const state = {
   report: null,
   loadedAt: null,
   accessSummary: null,
-  sourceExcel: ''
+  sourceExcel: '',
+  refreshNotice: ''
 };
 
 const els = {
@@ -59,7 +60,9 @@ function roleLabel(role) {
 }
 
 function buildLoadStatusText(routeCount) {
-  const parts = [`Mostrando ${routeCount} rutas`];
+  const parts = [];
+  if (state.refreshNotice) parts.push(state.refreshNotice);
+  parts.push(`Mostrando ${routeCount} rutas`);
   if (state.loadedAt) parts.push(`actualizado ${state.loadedAt}`);
   if (state.sourceExcel) parts.push(`fuente ${state.sourceExcel}`);
   return parts.join(' · ');
@@ -355,10 +358,22 @@ async function refreshCalendar() {
       els.status.textContent = data.error || 'No fue posible refrescar.';
       return;
     }
+    state.refreshNotice = buildRefreshNotice(data.publish);
     await fetchCalendar();
   } catch (error) {
     els.status.textContent = 'No fue posible conectar con el servidor para actualizar el calendario.';
   }
+}
+
+function buildRefreshNotice(publish) {
+  if (!publish) return 'Calendario actualizado localmente.';
+  if (publish.published) {
+    return `Calendario actualizado y publicado (${publish.commit}). Render puede tardar unos segundos en reflejarlo.`;
+  }
+  if (publish.reason) {
+    return `Calendario actualizado. ${publish.reason}`;
+  }
+  return 'Calendario actualizado localmente.';
 }
 
 async function logout() {
