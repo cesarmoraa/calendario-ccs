@@ -138,6 +138,18 @@ function fileModifiedTimeMs(filePath) {
   }
 }
 
+function directoryLatestModifiedTimeMs(directoryPath) {
+  try {
+    const entries = fs.readdirSync(directoryPath);
+    return entries.reduce((latest, entry) => {
+      const entryPath = path.join(directoryPath, entry);
+      return Math.max(latest, fileModifiedTimeMs(entryPath));
+    }, fileModifiedTimeMs(directoryPath));
+  } catch {
+    return 0;
+  }
+}
+
 function currentExcelModifiedTimeMs() {
   const excelPath = resolveExcelPath();
   try {
@@ -146,6 +158,14 @@ function currentExcelModifiedTimeMs() {
   } catch {
     return fileModifiedTimeMs(excelPath);
   }
+}
+
+function currentRouteSourcesModifiedTimeMs() {
+  return Math.max(
+    currentExcelModifiedTimeMs(),
+    directoryLatestModifiedTimeMs(resolveGpxDir()),
+    directoryLatestModifiedTimeMs(resolveTcxDir())
+  );
 }
 
 function processedDataModifiedTimeMs() {
@@ -925,7 +945,7 @@ async function refreshData() {
 }
 
 async function ensureFreshData() {
-  if (currentExcelModifiedTimeMs() > processedDataModifiedTimeMs()) {
+  if (currentRouteSourcesModifiedTimeMs() > processedDataModifiedTimeMs()) {
     await refreshData();
   }
 }
