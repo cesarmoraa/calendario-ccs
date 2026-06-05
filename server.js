@@ -177,24 +177,48 @@ function processedDataModifiedTimeMs() {
   return fileModifiedTimeMs(ROUTES_JSON_PATH);
 }
 
+function listRootEntries() {
+  try {
+    return fs.readdirSync(ROOT_DIR);
+  } catch {
+    return [];
+  }
+}
+
+function existingRootPath(name) {
+  const entry = listRootEntries().find((candidate) => candidate === name);
+  return entry ? path.join(ROOT_DIR, entry) : null;
+}
+
+function directoryContainsExtension(directoryPath, extension) {
+  try {
+    return fs
+      .readdirSync(directoryPath)
+      .some((entry) => path.extname(entry).toLowerCase() === extension.toLowerCase());
+  } catch {
+    return false;
+  }
+}
+
+function resolveRouteDir(primaryNames, secondaryNames, preferredExtension) {
+  const existingPrimary = primaryNames.map(existingRootPath).filter(Boolean);
+  const existingSecondary = secondaryNames.map(existingRootPath).filter(Boolean);
+
+  const primaryWithExtension = existingPrimary.find((directoryPath) => directoryContainsExtension(directoryPath, preferredExtension));
+  if (primaryWithExtension) return primaryWithExtension;
+
+  const secondaryWithExtension = existingSecondary.find((directoryPath) => directoryContainsExtension(directoryPath, preferredExtension));
+  if (secondaryWithExtension) return secondaryWithExtension;
+
+  return existingPrimary[0] || existingSecondary[0] || path.join(ROOT_DIR, primaryNames[0]);
+}
+
 function resolveGpxDir() {
-  const candidates = [
-    path.join(ROOT_DIR, "gpx"),
-    path.join(ROOT_DIR, "GPX"),
-    path.join(ROOT_DIR, "tcx"),
-    path.join(ROOT_DIR, "TCX")
-  ];
-  return candidates.find((candidate) => fs.existsSync(candidate)) || candidates[0];
+  return resolveRouteDir(["GPX", "gpx"], ["TCX", "tcx"], ".gpx");
 }
 
 function resolveTcxDir() {
-  const candidates = [
-    path.join(ROOT_DIR, "tcx"),
-    path.join(ROOT_DIR, "TCX"),
-    path.join(ROOT_DIR, "gpx"),
-    path.join(ROOT_DIR, "GPX")
-  ];
-  return candidates.find((candidate) => fs.existsSync(candidate)) || candidates[0];
+  return resolveRouteDir(["TCX", "tcx"], ["GPX", "gpx"], ".tcx");
 }
 
 function requestHostName(req) {
@@ -585,12 +609,19 @@ function cellRefForHeader(row, headerMap, headerName) {
 function getFileIndex(baseDir) {
   const files = fs.existsSync(baseDir) ? fs.readdirSync(baseDir) : [];
   const map = new Map();
+  const looseMap = new Map();
+
+  const toLooseKey = (value) => normalizeKey(value).replace(/\(\d+\)(?=[a-z0-9]*$)/g, "");
 
   for (const file of files) {
     const fullPath = path.join(baseDir, file);
     if (!fs.statSync(fullPath).isFile()) continue;
     const key = normalizeKey(file);
     map.set(key, fullPath);
+    const looseKey = toLooseKey(file);
+    if (looseKey && !looseMap.has(looseKey)) {
+      looseMap.set(looseKey, fullPath);
+    }
   }
 
   return {
@@ -598,8 +629,17 @@ function getFileIndex(baseDir) {
       const normalized = normalizeKey(fileName);
       if (map.has(normalized)) return map.get(normalized);
 
+      const looseNormalized = toLooseKey(fileName);
+      if (looseMap.has(looseNormalized)) return looseMap.get(looseNormalized);
+
       for (const [key, candidate] of map.entries()) {
         if (key.includes(normalized) || normalized.includes(key)) {
+          return candidate;
+        }
+      }
+
+      for (const [key, candidate] of looseMap.entries()) {
+        if (key.includes(looseNormalized) || looseNormalized.includes(key)) {
           return candidate;
         }
       }

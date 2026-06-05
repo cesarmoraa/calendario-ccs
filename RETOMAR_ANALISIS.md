@@ -188,6 +188,18 @@ Solución:
   - publicación exitosa
   - error real
 
+### 7. TCX presentes pero no usados en producción
+Problema:
+- el HTML publicado seguía mostrando `Tiempo Aprox = Por definir` aunque los `.tcx` existían en `GPX/`
+
+Causa:
+- el resolvedor de carpetas seguía priorizando `TCX/` por nombre, aunque esa carpeta estuviera vacía
+- algunos nombres de archivos duplicados con sufijo `(1)` tampoco empataban limpio
+
+Solución:
+- resolver carpeta por contenido real (`.gpx` / `.tcx`) y no solo por existencia del nombre
+- relajar el matching de nombres para tolerar duplicados tipo `(1)`
+
 ---
 
 ## Estado Actual a Revisar Antes de Tocar Algo
@@ -257,4 +269,3 @@ Agregar aquí:
 2. qué problema resolvió
 3. cómo se verificó
 4. qué commit quedó asociado
-
