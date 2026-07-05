@@ -117,6 +117,11 @@ Regla permanente:
 - restauración y consolidación del CSS
 - métricas compactadas
 - ancho desktop aumentado para reducir scroll horizontal
+- nueva vista "Etapas" estilo Marca (tabs Tabla / Etapas)
+  - cada ruta se muestra como bloque de etapa con perfil altimétrico en SVG
+  - `parseGpx` / `parseTcx` ahora devuelven `elevationProfile` (serie downsampleada a ~140 puntos), incluida en `data/rutas_procesadas.json`
+  - se regenera en cada arranque (`bootstrap -> refreshData`)
+  - PENDIENTE: verificación en navegador real y publicación a Render (aún sin commit)
 
 ---
 

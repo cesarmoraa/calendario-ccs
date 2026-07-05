@@ -6,7 +6,8 @@ const state = {
   loadedAt: null,
   accessSummary: null,
   sourceExcel: '',
-  refreshNotice: ''
+  refreshNotice: '',
+  view: 'table'
 };
 
 const els = {
@@ -20,6 +21,9 @@ const els = {
   adminAccessBody: document.getElementById('admin-access-body'),
   body: document.getElementById('calendar-body'),
   mobile: document.getElementById('mobile-cards'),
+  stagesView: document.getElementById('stages-view'),
+  tableView: document.getElementById('table-view'),
+  viewTabs: Array.from(document.querySelectorAll('.view-tab')),
   refresh: document.getElementById('refresh-btn'),
   logout: document.getElementById('logout-btn'),
   month: document.getElementById('filter-month'),
@@ -253,6 +257,151 @@ function renderCards(routes) {
   `).join('');
 }
 
+const DAY_FULL = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+const MONTH_FULL = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+
+function stageEndpoints(route) {
+  const parts = String(route.route || '').split(/\s+[-–—]\s+/).map((piece) => piece.trim()).filter(Boolean);
+  const origin = route.start && route.start !== 'Por definir' ? route.start : (parts[0] || route.route || 'Salida');
+  let finish = parts.length > 1 ? parts[parts.length - 1] : '';
+  if (finish && finish.toLowerCase() === origin.toLowerCase()) finish = '';
+  return { origin, finish };
+}
+
+function stageDateLabel(route) {
+  const parsed = parseRouteDate(route.date);
+  if (!parsed) return route.date || '';
+  return `${DAY_FULL[parsed.getDay()]}, ${parsed.getDate()} de ${MONTH_FULL[parsed.getMonth()]}`;
+}
+
+// Marca-style elevation block: filled silhouette (SVG, no text) plus HTML
+// overlays for the peak label and km axis so nothing gets stretched.
+function buildProfileBlock(profile) {
+  if (!Array.isArray(profile) || profile.length < 2) {
+    return '<div class="stage-profile-empty">Perfil no disponible</div>';
+  }
+
+  const W = 1000;
+  const H = 200;
+  const padTop = 0.16;
+  const padBottom = 0.12;
+  const totalKm = profile[profile.length - 1].d || 1;
+  const elevations = profile.map((point) => point.e);
+  const minEle = Math.min(...elevations);
+  const maxEle = Math.max(...elevations);
+  const eleRange = Math.max(maxEle - minEle, 1);
+
+  const xFrac = (d) => d / totalKm;
+  const yFrac = (e) => padTop + (1 - (e - minEle) / eleRange) * (1 - padTop - padBottom);
+
+  const linePoints = profile.map((point) => `${(xFrac(point.d) * W).toFixed(1)},${(yFrac(point.e) * H).toFixed(1)}`);
+  const areaPath = `M0,${H} L${linePoints.join(' L')} L${W},${H} Z`;
+  const linePath = `M${linePoints.join(' L')}`;
+
+  const gridLines = Array.from({ length: 5 }, (_, i) => {
+    const gx = (W * i) / 4;
+    return `<line class="stage-grid" x1="${gx.toFixed(1)}" y1="0" x2="${gx.toFixed(1)}" y2="${H}"></line>`;
+  }).join('');
+
+  const peak = profile.reduce((best, point) => (point.e > best.e ? point : best), profile[0]);
+  const peakLeft = Math.min(Math.max(xFrac(peak.d) * 100, 12), 88);
+  const peakTop = yFrac(peak.e) * 100;
+
+  return `
+    <div class="stage-plot">
+      <svg class="stage-profile" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Perfil altimétrico">
+        <defs>
+          <linearGradient id="stage-fill-${Math.round(minEle)}-${Math.round(maxEle)}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--stage-fill-top)"></stop>
+            <stop offset="100%" stop-color="var(--stage-fill-bottom)"></stop>
+          </linearGradient>
+        </defs>
+        ${gridLines}
+        <path class="stage-area" d="${areaPath}" fill="url(#stage-fill-${Math.round(minEle)}-${Math.round(maxEle)})"></path>
+        <path class="stage-line" d="${linePath}"></path>
+      </svg>
+      <span class="stage-peak" style="left:${peakLeft.toFixed(1)}%;top:${peakTop.toFixed(1)}%">
+        <i class="stage-peak-dot"></i>${Math.round(peak.e)} m
+      </span>
+    </div>
+    <div class="stage-axis">
+      <span>Km 0</span>
+      <span>${Math.round(totalKm)} km</span>
+    </div>
+  `;
+}
+
+function renderStages(routes) {
+  if (!els.stagesView) return;
+
+  if (!routes.length) {
+    els.stagesView.innerHTML = '<p class="stages-empty">No hay rutas para los filtros seleccionados.</p>';
+    return;
+  }
+
+  els.stagesView.innerHTML = routes.map((route, index) => {
+    const { origin, finish } = stageEndpoints(route);
+    const profile = route.elevationProfile;
+    const hasProfile = Array.isArray(profile) && profile.length > 1;
+    const startEle = hasProfile ? `${Math.round(profile[0].e)} m` : '';
+    const endEle = hasProfile ? `${Math.round(profile[profile.length - 1].e)} m` : '';
+    const caption = finish
+      ? `${origin} / ${finish} (${route.distanceText})`
+      : `${route.route} (${route.distanceText})`;
+
+    return `
+      <article class="stage-card">
+        <div class="stage-head">
+          <span class="stage-index">Ruta ${index + 1}</span>
+          <span class="stage-head-date">${stageDateLabel(route)}</span>
+        </div>
+        <div class="stage-endpoints">
+          <div class="stage-ep">
+            <span class="stage-ep-name"><i class="stage-pin start"></i>${origin}</span>
+            <span class="stage-ep-ele">${startEle}</span>
+          </div>
+          <div class="stage-ep end">
+            <span class="stage-ep-name">${finish || route.route}<i class="stage-pin finish"></i></span>
+            <span class="stage-ep-ele">${finish ? endEle : ''}</span>
+          </div>
+        </div>
+
+        ${buildProfileBlock(profile)}
+
+        <div class="stage-caption">${caption}</div>
+
+        <div class="stage-footer">
+          <div class="stage-tags">
+            <span class="profile-chip profile-${route.profileKey}">${route.profile}</span>
+            <span class="stage-tag">D+ ${route.elevationText}</span>
+            <span class="stage-tag">${route.timeText}</span>
+          </div>
+          <div class="stage-actions">
+            ${buildActionButton(route.stravaUrl, 'Strava')}
+            ${buildActionButton(route.mapsUrl, 'Maps')}
+            ${buildActionButton(route.wazeUrl, 'Waze')}
+          </div>
+        </div>
+      </article>
+    `;
+  }).join('');
+}
+
+function setView(view) {
+  state.view = view;
+  const isStages = view === 'stages';
+
+  els.viewTabs.forEach((tab) => {
+    const active = tab.dataset.view === view;
+    tab.classList.toggle('is-active', active);
+    tab.setAttribute('aria-selected', active ? 'true' : 'false');
+  });
+
+  if (els.stagesView) els.stagesView.hidden = !isStages;
+  if (els.tableView) els.tableView.hidden = isStages;
+  document.body.classList.toggle('stages-active', isStages);
+}
+
 function renderFilters(routes) {
   const unique = (values) => ['Todos', ...Array.from(new Set(values)).filter(Boolean)];
   const orderedMonths = (values) => {
@@ -297,6 +446,7 @@ function applyFilters() {
   renderMetrics(state.filteredRoutes);
   renderTable(state.filteredRoutes);
   renderCards(state.filteredRoutes);
+  renderStages(state.filteredRoutes);
   els.status.textContent = buildLoadStatusText(state.filteredRoutes.length);
 }
 
@@ -394,6 +544,7 @@ Object.values({
 els.search.addEventListener('input', applyFilters);
 els.refresh.addEventListener('click', refreshCalendar);
 els.logout.addEventListener('click', logout);
+els.viewTabs.forEach((tab) => tab.addEventListener('click', () => setView(tab.dataset.view)));
 
 (async function init() {
   await fetchSession();

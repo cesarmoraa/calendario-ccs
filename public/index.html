@@ -50,6 +50,11 @@
 
     <section class="metrics-grid" id="metrics-grid"></section>
 
+    <section class="view-tabs" role="tablist" aria-label="Vista del calendario">
+      <button class="view-tab is-active" id="tab-table" role="tab" aria-selected="true" data-view="table">Tabla</button>
+      <button class="view-tab" id="tab-stages" role="tab" aria-selected="false" data-view="stages">Etapas</button>
+    </section>
+
     <section class="status-banner">
       <span id="load-status">Cargando calendario...</span>
     </section>
@@ -85,7 +90,9 @@
       </div>
     </section>
 
-    <section class="desktop-table-wrap">
+    <section class="stages-view" id="stages-view" hidden></section>
+
+    <section class="desktop-table-wrap" id="table-view">
       <table class="calendar-table">
         <thead>
           <tr>

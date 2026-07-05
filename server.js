@@ -672,6 +672,33 @@ function haversineKm(lat1, lon1, lat2, lon2) {
   return earthRadius * c;
 }
 
+// Reduce a dense list of {distanceKm, ele} samples to a compact profile
+// suitable for drawing a Marca-style elevation silhouette in the browser.
+function downsampleElevationProfile(samples, targetPoints = 140) {
+  const clean = samples.filter(
+    (sample) => Number.isFinite(sample.distanceKm) && Number.isFinite(sample.ele)
+  );
+  if (clean.length < 2) return null;
+
+  const totalKm = clean[clean.length - 1].distanceKm;
+  if (!Number.isFinite(totalKm) || totalKm <= 0) return null;
+
+  const buckets = Math.min(targetPoints, clean.length);
+  const profile = [];
+  let cursor = 0;
+  for (let i = 0; i < buckets; i += 1) {
+    const targetKm = (totalKm * i) / (buckets - 1);
+    while (cursor < clean.length - 1 && clean[cursor].distanceKm < targetKm) {
+      cursor += 1;
+    }
+    profile.push({
+      d: Number(clean[cursor].distanceKm.toFixed(3)),
+      e: Math.round(clean[cursor].ele)
+    });
+  }
+  return profile;
+}
+
 function parseGpx(filePath) {
   const xml = fs.readFileSync(filePath, "utf8");
   const pointRegex = /<(trkpt|rtept)\b([^>]*)>([\s\S]*?)<\/\1>/g;
@@ -695,12 +722,14 @@ function parseGpx(filePath) {
       distanceKm: null,
       elevationGain: null,
       startLat: null,
-      startLon: null
+      startLon: null,
+      elevationProfile: null
     };
   }
 
   let distanceKm = 0;
   let elevationGain = 0;
+  const samples = [{ distanceKm: 0, ele: points[0].ele }];
   for (let index = 1; index < points.length; index += 1) {
     const prev = points[index - 1];
     const current = points[index];
@@ -709,13 +738,15 @@ function parseGpx(filePath) {
       const delta = current.ele - prev.ele;
       if (delta > 0) elevationGain += delta;
     }
+    samples.push({ distanceKm, ele: current.ele });
   }
 
   return {
     distanceKm,
     elevationGain,
     startLat: points[0].lat,
-    startLon: points[0].lon
+    startLon: points[0].lon,
+    elevationProfile: downsampleElevationProfile(samples)
   };
 }
 
@@ -745,12 +776,19 @@ function parseTcx(filePath) {
   }
 
   let elevationGain = 0;
-  for (let index = 1; index < points.length; index += 1) {
-    const prev = points[index - 1];
+  const samples = [];
+  for (let index = 0; index < points.length; index += 1) {
     const current = points[index];
-    if (prev.ele === null || current.ele === null) continue;
-    const delta = current.ele - prev.ele;
-    if (delta > 0) elevationGain += delta;
+    if (index > 0) {
+      const prev = points[index - 1];
+      if (prev.ele !== null && current.ele !== null) {
+        const delta = current.ele - prev.ele;
+        if (delta > 0) elevationGain += delta;
+      }
+    }
+    if (current.ele !== null && current.distanceMeters !== null) {
+      samples.push({ distanceKm: current.distanceMeters / 1000, ele: current.ele });
+    }
   }
 
   const firstPointWithPosition = points.find((point) => point.lat !== null && point.lon !== null) || null;
@@ -766,7 +804,8 @@ function parseTcx(filePath) {
     distanceKm: Number.isFinite(distanceKmFromLap) ? distanceKmFromLap : distanceKmFromTrack,
     elevationGain: points.length ? elevationGain : null,
     startLat: firstPointWithPosition ? firstPointWithPosition.lat : null,
-    startLon: firstPointWithPosition ? firstPointWithPosition.lon : null
+    startLon: firstPointWithPosition ? firstPointWithPosition.lon : null,
+    elevationProfile: downsampleElevationProfile(samples)
   };
 }
 
@@ -925,7 +964,8 @@ function parseWorkbookData() {
       distanceKm: null,
       elevationGain: null,
       startLat: null,
-      startLon: null
+      startLon: null,
+      elevationProfile: null
     };
     let tcxPath = null;
     let tcxData = {
@@ -934,7 +974,8 @@ function parseWorkbookData() {
       distanceKm: null,
       elevationGain: null,
       startLat: null,
-      startLon: null
+      startLon: null,
+      elevationProfile: null
     };
 
     if (gpxFile === "Por definir") {
@@ -960,6 +1001,7 @@ function parseWorkbookData() {
     const resolvedLon = tcxData.startLon ?? gpxData.startLon;
     const resolvedDistanceKm = tcxData.distanceKm ?? gpxData.distanceKm;
     const resolvedElevationGain = tcxData.elevationGain ?? gpxData.elevationGain;
+    const resolvedElevationProfile = tcxData.elevationProfile ?? gpxData.elevationProfile;
     const resolvedTimeText = timeText !== "Por definir" ? timeText : tcxData.timeText;
     const mapsUrl = buildMapsLink(mapsRaw, resolvedLat, resolvedLon);
     const wazeUrl = buildWazeLink(wazeRaw, resolvedLat, resolvedLon);
@@ -980,6 +1022,7 @@ function parseWorkbookData() {
       distanceText,
       elevationGain: resolvedElevationGain,
       elevationText,
+      elevationProfile: resolvedElevationProfile,
       timeText: resolvedTimeText,
       stravaUrl: stravaUrl || "Por definir",
       mapsUrl,
