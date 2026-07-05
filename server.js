@@ -1260,7 +1260,7 @@ function inferAccessRole(entry) {
 }
 
 function summarizeAccessLog(logEntries, users) {
-  const successfulEntries = logEntries.filter((entry) => entry && entry.result === "ok");
+  const successfulEntries = logEntries.filter((entry) => entry && (entry.resultado || entry.result) === "ok");
   const byAccount = new Map();
 
   for (const entry of successfulEntries) {

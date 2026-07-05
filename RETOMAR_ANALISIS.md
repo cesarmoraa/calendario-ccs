@@ -118,10 +118,14 @@ Regla permanente:
 - métricas compactadas
 - ancho desktop aumentado para reducir scroll horizontal
 - nueva vista "Etapas" estilo Marca (tabs Tabla / Etapas)
-  - cada ruta se muestra como bloque de etapa con perfil altimétrico en SVG
   - `parseGpx` / `parseTcx` ahora devuelven `elevationProfile` (serie downsampleada a ~140 puntos), incluida en `data/rutas_procesadas.json`
-  - se regenera en cada arranque (`bootstrap -> refreshData`)
-  - PENDIENTE: verificación en navegador real y publicación a Render (aún sin commit)
+  - se regenera en cada arranque (`bootstrap -> refreshData`); en Render se regenera solo al deploy
+  - layout compacto en grid de 2 columnas (1 columna en móvil ≤640px)
+  - cada tarjeta: cabecera "Ruta N — día, fecha", salida/llegada con altura y pin, perfil altimétrico en SVG (relleno cian de marca), etiqueta de la cima más alta, eje "Km 0 … total" y pie "Origen / Destino (km)"
+  - texto del perfil fuera del SVG (evita el estiramiento por `preserveAspectRatio="none"`)
+  - 28/34 rutas con perfil (las 6 sin GPX/TCX muestran "Perfil no disponible")
+  - LIMITACIÓN: solo se rotula la cima más alta; Marca rotula cimas intermedias, pero no tenemos nombres de puntos intermedios del GPX
+  - PUBLICADO en `d9b0905` (código de la función; se dejó fuera ruido local .DS_Store/logs)
 
 ---
 
@@ -138,6 +142,7 @@ Regla permanente:
 - `c22677c` ensancha layout desktop del calendario
 - `70a11dc` actualiza bitacora del calendario
 - `3edeb9e` agrega sabiduria html render
+- `d9b0905` agrega vista Etapas estilo Marca con perfil altimetrico
 
 ---
 
@@ -204,6 +209,20 @@ Causa:
 Solución:
 - resolver carpeta por contenido real (`.gpx` / `.tcx`) y no solo por existencia del nombre
 - relajar el matching de nombres para tolerar duplicados tipo `(1)`
+
+---
+
+### 8. Panel "Quién ha ingresado" siempre en 0
+Problema:
+- el panel admin de accesos mostraba "0 cuentas" pese a que sí había logins
+
+Causa:
+- `registerAccess` guarda el campo como `resultado` (español)
+- `summarizeAccessLog` filtraba por `entry.result` (inglés) → nunca empataba
+
+Solución:
+- filtrar por `(entry.resultado || entry.result) === "ok"` (tolera registros viejos y nuevos)
+- verificado contra `data/accesos.json`: 23/24 registros ahora cuentan como ingreso exitoso
 
 ---
 
