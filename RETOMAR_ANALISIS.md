@@ -143,6 +143,8 @@ Regla permanente:
 - `70a11dc` actualiza bitacora del calendario
 - `3edeb9e` agrega sabiduria html render
 - `d9b0905` agrega vista Etapas estilo Marca con perfil altimetrico
+- `5bb40b9` corrige panel de accesos que siempre mostraba 0
+- `ee38760` actualiza calendario 2026 desde Excel (33 -> 67 rutas)
 
 ---
 
@@ -277,6 +279,37 @@ Regla:
 2. confirmar carga de usuarios desde Excel
 3. confirmar que el cambio de usuarios fue publicado
 4. confirmar producción
+
+---
+
+## Actualización de Calendario 18-07-2026
+Fuente: Excel maestro actualizado (19985 → 22327 bytes) + ~10 pares GPX/TCX nuevos.
+- rutas: 33 → 67 (41 nuevas, 7 renombradas/reorganizadas)
+- ~19 rutas existentes recibieron su Tiempo (antes "Por definir") por los TCX nuevos
+- usuarios cargados: 97 (0 duplicados por PIN, 0 filas ignoradas)
+- calendario completo hasta diciembre 2026
+- FIX: la ruta 24/10 "Kross - Pangue - Casa Blanca - Cuesta Zapata - Kross" pedía un GPX
+  con nombre distinto al del archivo subido ("...Geronimo - cuesta zapata"). Se renombró
+  el par .gpx/.tcx al nombre del Excel → ahora resuelve (106.9 km, 3:57:50, 1230 m D+)
+- quedan 14 rutas "Por definir" por diseño: viajes/eventos sin ruta única
+  (Viaje Colchagua, Viaje al Norte, Criterium Ruta de las Estrellas, Giro al Sur, Paseo Santo Domingo)
+
+---
+
+## Observaciones de Uso (al 04-07-2026)
+Análisis de `data/accesos.json` (24 registros, 23 exitosos):
+- 21 ingresos son de la cuenta admin ("Administrador CCS")
+- solo 1 socio ha entrado: "Fabian Mercado" (member), 2 veces el 30-04-2026 durante el lanzamiento
+- ningún socio ha entrado después del 30-04-2026 (mayo–junio solo admin)
+- conclusión: la app la ha usado casi solo el admin; falta difusión a los socios
+
+---
+
+## Pendientes / Ideas
+- exportar el log de accesos a Excel/CSV (todos los registros o resumen por cuenta)
+- opcional: mostrar en el panel admin los socios que aún NO han entrado
+  (ya existe la lógica `neverEntered` en `summarizeAccessLog`, pero la tabla no la pinta)
+- opcional: perfil Etapas en amarillo tipo Marca (hoy va en cian de marca CCS)
 
 ---
 

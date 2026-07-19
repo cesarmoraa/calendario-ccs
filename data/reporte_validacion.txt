@@ -1,29 +1,53 @@
 Reporte de validación CCS 2026
-Generado: 29-04-2026, 8:59:31 p. m.
+Generado: 18-07-2026, 8:54:39 p. m.
 
 Excel fuente: calendario.xlsx
-Carpeta GPX: gpx
-Usuarios cargados: 93
+Carpeta GPX: GPX
+Usuarios cargados: 97
 
-Rutas sin GPX: 6
+Rutas sin GPX: 14
 - 08/05/26 · Viaje Colchagua: Dia 1
 - 09/05/26 · Viaje Colchagua: Dia 2
 - 10/05/26 · Viaje Colchagua: Dia 3
 - 27/06/26 · Viaje al Norte
 - 28/06/26 · Viaje al Norte
 - 29/06/26 · Viaje al Norte
+- 08/08/26 · Paseo Santo Domingo
+- 09/10/26 · Criterium Ruta de las Estrellas
+- 10/10/26 · Criterium Ruta de las Estrellas
+- 11/10/26 · Criterium Ruta de las Estrellas
+- 13/10/26 · Criterium Ruta de las Estrellas
+- 05/12/26 · Giro al Sur
+- 06/12/26 · Giro al Sur
+- 07/12/26 · Giro al Sur
 
 GPX no encontrados: 0
 
-Rutas sin Strava: 6
+Rutas sin Strava: 14
 - 08/05/26 · Viaje Colchagua: Dia 1
 - 09/05/26 · Viaje Colchagua: Dia 2
 - 10/05/26 · Viaje Colchagua: Dia 3
 - 27/06/26 · Viaje al Norte
 - 28/06/26 · Viaje al Norte
 - 29/06/26 · Viaje al Norte
+- 08/08/26 · Paseo Santo Domingo
+- 09/10/26 · Criterium Ruta de las Estrellas
+- 10/10/26 · Criterium Ruta de las Estrellas
+- 11/10/26 · Criterium Ruta de las Estrellas
+- 13/10/26 · Criterium Ruta de las Estrellas
+- 05/12/26 · Giro al Sur
+- 06/12/26 · Giro al Sur
+- 07/12/26 · Giro al Sur
 
-Rutas sin Inicio: 0
+Rutas sin Inicio: 8
+- 08/08/26 · Paseo Santo Domingo
+- 09/10/26 · Criterium Ruta de las Estrellas
+- 10/10/26 · Criterium Ruta de las Estrellas
+- 11/10/26 · Criterium Ruta de las Estrellas
+- 13/10/26 · Criterium Ruta de las Estrellas
+- 05/12/26 · Giro al Sur
+- 06/12/26 · Giro al Sur
+- 07/12/26 · Giro al Sur
 
 Filas ignoradas: 0
 
