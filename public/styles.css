@@ -1053,11 +1053,17 @@ body.stages-active .mobile-cards {
 
   .stage-actions {
     flex-wrap: wrap;
+    justify-content: center;
   }
 
   .stage-actions .action-btn {
     flex: 1 1 calc(33.333% - 6px);
     min-width: 80px;
+  }
+
+  .stage-actions .strava-group {
+    flex-basis: 100%;
+    align-items: center;
   }
 }
 
