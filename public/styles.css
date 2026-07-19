@@ -989,6 +989,37 @@ body.stages-active .mobile-cards {
   gap: 6px;
 }
 
+/* Grupo de botones Strava por nivel (Ristretto / Macchiato / Capuccino) */
+.strava-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 6px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 122, 90, 0.35);
+  background: rgba(255, 122, 90, 0.08);
+}
+
+.strava-group-label {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #ff9166;
+  margin-right: 2px;
+}
+
+.strava-group .action-btn {
+  min-width: 26px;
+  padding: 4px 8px;
+  text-align: center;
+  font-weight: 800;
+}
+
+.stage-actions .strava-group .action-btn,
+.action-row .strava-group .action-btn {
+  flex: 0 0 auto;
+}
+
 .stage-actions .action-btn {
   padding: 5px 10px;
   font-size: 0.74rem;

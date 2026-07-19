@@ -606,6 +606,19 @@ function cellRefForHeader(row, headerMap, headerName) {
   return null;
 }
 
+// Extrae un link de Strava probando varios nombres de columna (el primero que
+// tenga URL gana). Toma la URL del hipervínculo de la celda o del texto si es URL.
+function extractStravaLink(row, headerMap, hyperlinks, headerNames) {
+  for (const name of headerNames) {
+    const ref = cellRefForHeader(row, headerMap, name);
+    if (!ref) continue;
+    const text = Object.prototype.hasOwnProperty.call(row.cells, ref) ? row.cells[ref] : "";
+    const url = hyperlinks.get(ref) || (/^https?:\/\//i.test(text) ? text : "");
+    if (url) return url;
+  }
+  return "";
+}
+
 function getFileIndex(baseDir) {
   const files = fs.existsSync(baseDir) ? fs.readdirSync(baseDir) : [];
   const map = new Map();
@@ -952,9 +965,12 @@ function parseWorkbookData() {
     const profileRaw = cellValueFromRow(row, routeHeaderMap, "Perfil");
     const mapsRaw = cellValueFromRow(row, routeHeaderMap, "Google Maps (inicio exacto)");
     const wazeRaw = cellValueFromRow(row, routeHeaderMap, "Waze (inicio exacto)");
-    const stravaRef = cellRefForHeader(row, routeHeaderMap, "Link Strava");
-    const stravaText = cellValueFromRow(row, routeHeaderMap, "Link Strava");
-    const stravaUrl = routeHyperlinks.get(stravaRef) || (/^https?:\/\//i.test(stravaText) ? stravaText : "");
+    const stravaR = extractStravaLink(row, routeHeaderMap, routeHyperlinks, ["R", "Strava R", "Ristretto", "Link Strava"]);
+    // M y C caen a R mientras no tengan su propio link (hoy se clonan con fórmula "=E2",
+    // que copia el texto "Strava" pero no el hipervínculo). Al pegar la URL real, divergen.
+    const stravaM = extractStravaLink(row, routeHeaderMap, routeHyperlinks, ["M", "Strava M", "Macchiato"]) || stravaR;
+    const stravaC = extractStravaLink(row, routeHeaderMap, routeHyperlinks, ["C", "Strava C", "Capuccino", "Cappuccino"]) || stravaR;
+    const stravaUrl = stravaR;
 
     if (!stravaUrl) report.routesWithoutStrava.push(`${formatDate(date)} · ${routeName}`);
     if (start === "Por definir") report.routesWithoutStart.push(`${formatDate(date)} · ${routeName}`);
@@ -1025,6 +1041,9 @@ function parseWorkbookData() {
       elevationProfile: resolvedElevationProfile,
       timeText: resolvedTimeText,
       stravaUrl: stravaUrl || "Por definir",
+      stravaR: stravaR || "Por definir",
+      stravaM: stravaM || "Por definir",
+      stravaC: stravaC || "Por definir",
       mapsUrl,
       wazeUrl,
       gpxFile: gpxFile === "Por definir" ? null : gpxFile,

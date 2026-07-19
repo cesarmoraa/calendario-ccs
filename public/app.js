@@ -126,9 +126,25 @@ function routeMatches(route, filters) {
   return true;
 }
 
-function buildActionButton(link, label) {
+function buildActionButton(link, label, title) {
   const disabled = !link || link === 'Pendiente' || link === 'Por definir';
-  return `<a class="action-btn ${disabled ? 'is-disabled' : ''}" ${disabled ? '' : `href="${link}" target="_blank" rel="noopener noreferrer"`}>${label}</a>`;
+  const titleAttr = title ? ` title="${title}"` : '';
+  return `<a class="action-btn ${disabled ? 'is-disabled' : ''}"${titleAttr} ${disabled ? '' : `href="${link}" target="_blank" rel="noopener noreferrer"`}>${label}</a>`;
+}
+
+const STRAVA_VARIANTS = [
+  ['stravaR', 'R', 'Ristretto'],
+  ['stravaM', 'M', 'Macchiato'],
+  ['stravaC', 'C', 'Capuccino']
+];
+
+// Tres botones de Strava por nivel (R/M/C). Fallback a stravaUrl si aún no hay R.
+function buildStravaButtons(route) {
+  const buttons = STRAVA_VARIANTS.map(([key, label, title]) => {
+    const link = route[key] || (key === 'stravaR' ? route.stravaUrl : '');
+    return buildActionButton(link, label, `Strava · ${title}`);
+  }).join('');
+  return `<span class="strava-group"><span class="strava-group-label">Strava</span>${buttons}</span>`;
 }
 
 function renderMetrics(routes) {
@@ -221,7 +237,7 @@ function renderTable(routes) {
       <td><span class="status-pill status-${route.statusKey}">${route.status}</span></td>
       <td>
         <div class="action-stack">
-          ${buildActionButton(route.stravaUrl, 'Strava')}
+          ${buildStravaButtons(route)}
           ${buildActionButton(route.mapsUrl, 'Maps')}
           ${buildActionButton(route.wazeUrl, 'Waze')}
         </div>
@@ -249,7 +265,7 @@ function renderCards(routes) {
         <div><span>D+</span><strong>${route.elevationText}</strong></div>
       </div>
       <div class="action-row">
-        ${buildActionButton(route.stravaUrl, 'Strava')}
+        ${buildStravaButtons(route)}
         ${buildActionButton(route.mapsUrl, 'Maps')}
         ${buildActionButton(route.wazeUrl, 'Waze')}
       </div>
@@ -377,7 +393,7 @@ function renderStages(routes) {
             <span class="stage-tag">${route.timeText}</span>
           </div>
           <div class="stage-actions">
-            ${buildActionButton(route.stravaUrl, 'Strava')}
+            ${buildStravaButtons(route)}
             ${buildActionButton(route.mapsUrl, 'Maps')}
             ${buildActionButton(route.wazeUrl, 'Waze')}
           </div>

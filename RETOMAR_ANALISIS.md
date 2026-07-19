@@ -306,6 +306,23 @@ Análisis de `data/accesos.json` (24 registros, 23 exitosos):
 ---
 
 ## Pendientes / Ideas
+- niveles de ruta R/M/C (Ristretto/Macchiato/Capuccino):
+  - FASE 1 (HECHA Y PUBLICADA): 3 columnas R/M/C (E/F/G) en el Excel = 3 links de Strava por ruta.
+    Backend: extractStravaLink lee R/M/C (fallback R -> "Link Strava"); M y C caen a R si no tienen
+    su propio link. Frontend: buildStravaButtons muestra 3 botones (tabla, tarjetas, etapas).
+    OJO: el usuario clonó M/C con fórmula "=E2", que copia el texto "Strava" pero NO el hipervínculo,
+    así que M/C no traen URL propia -> hoy caen a R. Para que M/C tengan su ruta, hay que pegar la
+    URL real (como hipervínculo o texto https://...) en esas celdas, reemplazando la fórmula.
+  - DECISION: solo se necesitan los 3 LINKS. NO se hará métricas por grupo (se descartó carpetas
+    GPX/R,M,C y selector). El GPX/TCX único por fila sigue dando inicio/término + métricas.
+  - FASE 2 (DESCARTADA salvo pedido futuro): cada grupo con su propio GPX/TCX y métricas. Requeriría
+    PROPIA distancia/D+/tiempo/perfil. Diseño acordado con el usuario:
+    - carpetas: GPX/R, GPX/M, GPX/C (los archivos actuales se mueven a GPX/R)
+    - una sola columna "Archivo GPX" con el nombre base; la app lo resuelve DENTRO de cada carpeta
+    - backend: parsear el gpx/tcx de cada carpeta por fila; si M o C no tienen archivo, fallback a R
+    - salida sugerida: route.variants = { R:{...}, M:{...}, C:{...} }, top-level = R para compat
+    - UI: selector R/M/C que intercambia distancia/D+/tiempo/perfil y el perfil altimétrico
+    - se difiere a cuando exista data real de M/C para poder probarlo (evita build a ciegas)
 - exportar el log de accesos a Excel/CSV (todos los registros o resumen por cuenta)
 - opcional: mostrar en el panel admin los socios que aún NO han entrado
   (ya existe la lógica `neverEntered` en `summarizeAccessLog`, pero la tabla no la pinta)
