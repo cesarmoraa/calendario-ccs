@@ -842,6 +842,14 @@ body.stages-active .mobile-cards {
   min-width: 0;
 }
 
+.stage-ep-kicker {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+}
+
 .stage-ep.end {
   text-align: right;
   justify-items: end;

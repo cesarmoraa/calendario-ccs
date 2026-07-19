@@ -358,7 +358,6 @@ function renderStages(routes) {
     const profile = route.elevationProfile;
     const hasProfile = Array.isArray(profile) && profile.length > 1;
     const startEle = hasProfile ? `${Math.round(profile[0].e)} m` : '';
-    const endEle = hasProfile ? `${Math.round(profile[profile.length - 1].e)} m` : '';
     const caption = finish
       ? `${origin} / ${finish} (${route.distanceText})`
       : `${route.route} (${route.distanceText})`;
@@ -371,12 +370,9 @@ function renderStages(routes) {
         </div>
         <div class="stage-endpoints">
           <div class="stage-ep">
-            <span class="stage-ep-name"><i class="stage-pin start"></i>${origin}</span>
-            <span class="stage-ep-ele">${startEle}</span>
-          </div>
-          <div class="stage-ep end">
-            <span class="stage-ep-name">${finish || route.route}<i class="stage-pin finish"></i></span>
-            <span class="stage-ep-ele">${finish ? endEle : ''}</span>
+            <span class="stage-ep-kicker">Inicio</span>
+            <span class="stage-ep-name"><i class="stage-pin start"></i>${route.start}</span>
+            ${startEle ? `<span class="stage-ep-ele">${startEle}</span>` : ''}
           </div>
         </div>
 
