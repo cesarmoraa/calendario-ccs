@@ -126,6 +126,15 @@ Regla permanente:
   - 28/34 rutas con perfil (las 6 sin GPX/TCX muestran "Perfil no disponible")
   - LIMITACIÓN: solo se rotula la cima más alta; Marca rotula cimas intermedias, pero no tenemos nombres de puntos intermedios del GPX
   - PUBLICADO en `d9b0905` (código de la función; se dejó fuera ruido local .DS_Store/logs)
+- limpieza de UI (18-07-2026):
+  - se ELIMINÓ el estado ("Confirmada"/"Por definir") de toda la app: columna de la tabla,
+    pastilla de las tarjetas móviles y de las etapas. El usuario lo consideró inútil.
+    OJO: `computeRouteStatus` y `statusKey` siguen existiendo en el backend; solo no se pintan.
+  - botones de Strava agrupados con título "Link Strava" centrado sobre R/M/C
+  - en móvil, el cuadro Link Strava ocupa el ancho y centra sus botones (tarjetas y etapas)
+  - encabezado de cada etapa muestra SOLO el Inicio (columna D). Antes mostraba origen -> destino,
+    pero en rutas circulares/largas el nombre completo se solapaba. El nombre completo ya está
+    en el pie de la tarjeta junto a los km.
 
 ---
 
@@ -144,7 +153,14 @@ Regla permanente:
 - `3edeb9e` agrega sabiduria html render
 - `d9b0905` agrega vista Etapas estilo Marca con perfil altimetrico
 - `5bb40b9` corrige panel de accesos que siempre mostraba 0
-- `ee38760` actualiza calendario 2026 desde Excel (33 -> 67 rutas)
+- `de1f725` actualiza calendario 2026 desde Excel (33 -> 67 rutas)
+- `081e337` agrega keep-alive con GitHub Actions (resultó NO confiable, ver sección cold-start)
+- `66588b4` agrega 3 links de Strava por ruta (niveles R/M/C)
+- `af2f5f0` titulo "Link Strava" sobre botones R/M/C y quita columna Estado
+- `d2e9818` centra el titulo "Link Strava"
+- `f6f24a9` movil: quita pastilla de estado y centra el cuadro Link Strava
+- `7f54a43` etapas: encabezado muestra solo el Inicio (evita solape en rutas circulares)
+- `9e12155` etapas movil: centra el cuadro Link Strava
 
 ---
 
@@ -302,6 +318,39 @@ Análisis de `data/accesos.json` (24 registros, 23 exitosos):
 - solo 1 socio ha entrado: "Fabian Mercado" (member), 2 veces el 30-04-2026 durante el lanzamiento
 - ningún socio ha entrado después del 30-04-2026 (mayo–junio solo admin)
 - conclusión: la app la ha usado casi solo el admin; falta difusión a los socios
+
+---
+
+## Cold-start de Render / posible migración a Vercel (18-07-2026)
+Problema: el plan free de Render duerme el servicio tras ~15 min sin visitas; el primer visitante
+espera 30-50s ("SERVICE WAKING UP"). Molesta mucho al usuario.
+
+Intentos:
+1. Keep-alive con GitHub Actions (`.github/workflows/keepalive.yml`, cron */10) -> **NO FUNCIONÓ**.
+   En 1h20 no disparó ni un run programado (solo los manuales). GitHub estrangula los cron de
+   intervalo corto; no es confiable como keep-alive. Se dejó el workflow pero no hay que contar con él.
+2. **UptimeRobot** (monitor HTTP cada 5 min a https://calendario-ccs.onrender.com/) -> configurado
+   el 18-07-2026 con la cuenta de GitHub del usuario. ESTADO: funcionando.
+   - monitor "calendario-ccs.onrender.com", HTTP/S, intervalo 5 min
+   - Current status: Up · 100% last 24h · 0 incidentes · respuesta ~295ms
+   - verificado también por curl: HTTP 200 en ~0.2s
+   - el rojo/0% inicial fue solo el arranque (el primer chequeo pilló el servicio dormido)
+   - PENDIENTE la prueba real del usuario: no visitar por ~30 min y comprobar que abre instantáneo
+   - por qué funciona: Render duerme a los 15 min de silencio; un ping cada 5 min nunca lo permite
+
+Si UptimeRobot no basta -> MIGRAR A VERCEL. Plan acordado:
+- **Datos**: mover el parseo de Excel + GPX/TCX al **build** (script que emite JSON estático).
+  Elimina el trabajo en runtime y la escritura de `data/rutas_procesadas.json`.
+- **Frontend**: `public/` servido estático desde CDN (esto es lo que da la sensación instantánea).
+- **Login**: reemplazar las sesiones en memoria (`sessions` Map) por **cookie firmada** (HMAC/JWT con
+  secreto en env var). CUIDADO: el listado de socios/PIN debe quedar solo del lado servidor,
+  NUNCA como asset público.
+- **Log de accesos**: hoy escribe `data/accesos.json` (imposible en Vercel, FS de solo lectura).
+  Mover a un store externo (Vercel KV o Upstash, ambos con capa gratis).
+- **Auto-publish por git**: se elimina (ya hoy solo funciona desde localhost; se publica con git push).
+- Endpoints como funciones serverless: `api/login`, `api/session`, `api/logout`, `api/calendar`,
+  `api/access-summary`.
+- Esfuerzo estimado: varias horas; la parte delicada es el login.
 
 ---
 
