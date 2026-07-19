@@ -1,0 +1,20 @@
+name: keep-alive
+
+# Mantiene despierto el servicio de Render (plan free duerme tras ~15 min sin visitas).
+# Hace ping cada ~10 min. En el peor caso (GitHub atrasado) el sitio se comporta
+# como sin este workflow: un cold-start puntual. Nunca queda peor.
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render
+        run: |
+          curl -fsS --retry 3 --retry-delay 10 --max-time 90 \
+            https://calendario-ccs.onrender.com/ -o /dev/null \
+            && echo "Ping OK $(date -u)"
