@@ -1070,4 +1070,13 @@ body.stages-active .mobile-cards {
   .action-row .action-btn {
     flex-basis: 100%;
   }
+
+  .action-row {
+    justify-content: center;
+  }
+
+  .action-row .strava-group {
+    flex-basis: 100%;
+    align-items: center;
+  }
 }

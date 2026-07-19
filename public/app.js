@@ -253,7 +253,6 @@ function renderCards(routes) {
           <span class="route-date">${route.date}</span>
           <h3>${route.route}</h3>
         </div>
-        <span class="status-pill status-${route.statusKey}">${route.status}</span>
       </div>
       <div class="route-meta-grid">
         <div><span>Tipo</span><strong>${route.type}</strong></div>
