@@ -993,7 +993,7 @@ body.stages-active .mobile-cards {
 .strava-group {
   display: inline-flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 4px;
   padding: 4px 6px;
   border-radius: 10px;
@@ -1007,6 +1007,8 @@ body.stages-active .mobile-cards {
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: #ff9166;
+  text-align: center;
+  width: 100%;
 }
 
 .strava-group-buttons {
