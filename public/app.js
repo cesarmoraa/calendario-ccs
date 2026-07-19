@@ -144,7 +144,7 @@ function buildStravaButtons(route) {
     const link = route[key] || (key === 'stravaR' ? route.stravaUrl : '');
     return buildActionButton(link, label, `Strava · ${title}`);
   }).join('');
-  return `<span class="strava-group"><span class="strava-group-label">Strava</span>${buttons}</span>`;
+  return `<span class="strava-group"><span class="strava-group-label">Link Strava</span><span class="strava-group-buttons">${buttons}</span></span>`;
 }
 
 function renderMetrics(routes) {
@@ -234,7 +234,6 @@ function renderTable(routes) {
       <td>${route.distanceText}</td>
       <td>${route.elevationText}</td>
       <td>${route.timeText}</td>
-      <td><span class="status-pill status-${route.statusKey}">${route.status}</span></td>
       <td>
         <div class="action-stack">
           ${buildStravaButtons(route)}
