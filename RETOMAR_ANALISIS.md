@@ -312,6 +312,16 @@ Fuente: Excel maestro actualizado (19985 → 22327 bytes) + ~10 pares GPX/TCX nu
 
 ---
 
+## Actualización de Calendario 19-07-2026
+Excel maestro editado (24443 -> 24115 bytes), sin nuevos GPX/TCX. Rutas: 67 -> 63.
+- 2 nuevas: "Lo Prado - Cuesta Ibacache (Bis)" (05/09), "Giro Zapallar" (10/10, Por definir)
+- 6 quitadas: "Enjoy Los Andes a Zapallar", el bloque de 4 "Criterium Ruta de las Estrellas"
+  (09-13/10) y "Mc Chamisero - Til Til - Cumbre La Dormida (Bis)" (10/10)
+- sin cambios de métricas en las demás; GPX no encontrados: 0; 97 usuarios
+- links M/C siguen = R (aún no se han pegado los reales)
+
+---
+
 ## Observaciones de Uso (al 04-07-2026)
 Análisis de `data/accesos.json` (24 registros, 23 exitosos):
 - 21 ingresos son de la cuenta admin ("Administrador CCS")
