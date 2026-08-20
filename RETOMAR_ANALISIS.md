@@ -312,6 +312,22 @@ Fuente: Excel maestro actualizado (19985 → 22327 bytes) + ~10 pares GPX/TCX nu
 
 ---
 
+## Actualización de Calendario 19-07-2026 (b) — links C + fix RUT
+Excel editado (24115 -> 24956 bytes), sin nuevos GPX. Rutas 63, usuarios 97 (mismos conteos, solo edición).
+- se pegaron los links propios de C (Capuccino) en 18 rutas -> C ya no cae a R en esas
+- M sigue sin link propio (= R por ahora)
+- usuario: "Rodrigo Martinez" corrige su RUT 10.652.669.9 -> 10.652.669-9 (punto -> guion);
+  como el PIN se deriva del RUT, esto arregla su login
+- validación: GPX no encontrados 0, 0 filas ignoradas, 0 PIN duplicados
+
+### Nota de entorno (19-07-2026): permiso de macOS a iCloud
+En una sesión, el proceso de Claude Code PERDIÓ el acceso a la carpeta de iCloud
+(`~/Library/Mobile Documents/com~apple~CloudDocs/...`) a mitad de camino: `ls`/`git` daban
+"Operation not permitted" (fallaba el recorrido de carpetas y hasta leer archivos), mientras
+que HOME funcionaba. Causa: TCC de macOS. Solución que funcionó: activar "Acceso a disco completo"
+para la app de Claude Code en Ajustes > Privacidad y seguridad, y **reiniciar la app (⌘Q)** —
+un proceso ya abierto no toma el permiso. Alternativa de raíz: mover el repo fuera de iCloud.
+
 ## Actualización de Calendario 19-07-2026
 Excel maestro editado (24443 -> 24115 bytes), sin nuevos GPX/TCX. Rutas: 67 -> 63.
 - 2 nuevas: "Lo Prado - Cuesta Ibacache (Bis)" (05/09), "Giro Zapallar" (10/10, Por definir)
