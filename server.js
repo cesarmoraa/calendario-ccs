@@ -13,6 +13,9 @@ const ROUTES_JSON_PATH = path.join(DATA_DIR, "rutas_procesadas.json");
 const REPORT_PATH = path.join(DATA_DIR, "reporte_validacion.txt");
 const SESSION_COOKIE = "ccs_session";
 const PORT = Number(process.env.PORT || 3000);
+// Llave para el endpoint público de solo-lectura /api/public/calendar.
+// Se define como variable de entorno (en Render y en local); nunca en el código.
+const PUBLIC_API_KEY = process.env.CALENDAR_API_KEY || "";
 const ADMIN_CREDENTIALS = {
   username: "admin",
   password: "Lider0001$",
@@ -1429,6 +1432,42 @@ function requireAdminSession(req, res) {
 }
 
 async function handleApi(req, res, pathname) {
+  // Endpoint público de solo-lectura para consumir el calendario desde otro proyecto.
+  // Protegido con API key (header "x-api-key" o query ?key=). Devuelve solo rutas,
+  // nunca usuarios ni datos personales. CORS abierto porque el contenido no es sensible.
+  if (pathname === "/api/public/calendar") {
+    const corsHeaders = {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, OPTIONS",
+      "Access-Control-Allow-Headers": "x-api-key, Content-Type"
+    };
+    if (req.method === "OPTIONS") {
+      res.writeHead(204, corsHeaders);
+      res.end();
+      return;
+    }
+    if (req.method !== "GET") {
+      sendJson(res, 405, { error: "Método no permitido" }, corsHeaders);
+      return;
+    }
+    if (!PUBLIC_API_KEY) {
+      sendJson(res, 503, { error: "API pública no configurada (falta CALENDAR_API_KEY)" }, corsHeaders);
+      return;
+    }
+    const providedKey = req.headers["x-api-key"] || url.parse(req.url, true).query.key || "";
+    if (providedKey !== PUBLIC_API_KEY) {
+      sendJson(res, 401, { error: "Llave inválida o ausente" }, corsHeaders);
+      return;
+    }
+    await ensureFreshData();
+    sendJson(res, 200, {
+      loadedAt: state.loadedAt,
+      count: state.routes.length,
+      routes: state.routes
+    }, corsHeaders);
+    return;
+  }
+
   if (pathname === "/api/session" && req.method === "GET") {
     const session = getSession(req);
     if (!session) {

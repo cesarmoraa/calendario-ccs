@@ -380,6 +380,22 @@ Si UptimeRobot no basta -> MIGRAR A VERCEL. Plan acordado:
 
 ---
 
+## API pública del calendario (para consumir desde otro proyecto)
+- endpoint: GET /api/public/calendar  (server.js, dentro de handleApi)
+- auth: API key por header "x-api-key" o query ?key=; se lee de env var CALENDAR_API_KEY
+  (nunca en el código). Si la env var no está seteada -> 503 (falla cerrado).
+- devuelve SOLO rutas ({ loadedAt, count, routes }), nunca usuarios ni datos personales
+- CORS abierto (Access-Control-Allow-Origin: *) + preflight OPTIONS 204
+- PENDIENTE del usuario: setear CALENDAR_API_KEY en Render (Environment) para activarlo en prod
+- nota: si el consumidor es un frontend en navegador, la key queda visible en el cliente;
+  para que la key sea de verdad secreta, consumir desde un backend (server-to-server)
+
+## SEGURIDAD PENDIENTE: PII de socios en repo público
+- el repo de GitHub es público y tiene commiteados el Excel y data/rutas_procesadas.json,
+  que contienen los 97 socios con NOMBRE + RUT (dato personal). Cualquiera puede bajarlos por raw.
+- opciones: (a) poner el repo privado; (b) dejar de versionar el RUT (sacar users del JSON y
+  no commitear el Excel con la hoja USUARIOS), y purgar el historial. NO abordado aún.
+
 ## Pendientes / Ideas
 - niveles de ruta R/M/C (Ristretto/Macchiato/Capuccino):
   - FASE 1 (HECHA Y PUBLICADA): 3 columnas R/M/C (E/F/G) en el Excel = 3 links de Strava por ruta.
