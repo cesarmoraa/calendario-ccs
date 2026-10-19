@@ -1,5 +1,5 @@
 {
-  "loadedAt": "19-10-2026, 7:38:34 p. m.",
+  "loadedAt": "19-10-2026, 7:57:32 p. m.",
   "routes": [
     {
       "id": "route-16",
@@ -26824,7 +26824,7 @@
       "stravaUrl": "https://www.strava.com/routes/2921779823437514684",
       "stravaR": "https://www.strava.com/routes/2921779823437514684",
       "stravaM": "https://www.strava.com/routes/2921779823437514684",
-      "stravaC": "https://www.strava.com/routes/3420675916839413112",
+      "stravaC": "https://www.strava.com/routes/2921779823437514684",
       "mapsUrl": "https://www.google.com/maps?q=-33.440880,-70.841870",
       "wazeUrl": "https://waze.com/ul?ll=-33.440880,-70.841870&navigate=yes",
       "gpxFile": "Lo Prado - Ibacache -Quintay ( Ristretto + Macchiato).gpx",
@@ -32637,7 +32637,7 @@
     }
   ],
   "report": {
-    "generatedAt": "19-10-2026, 7:38:34 p. m.",
+    "generatedAt": "19-10-2026, 7:57:32 p. m.",
     "excelFile": "calendario.xlsx",
     "gpxDirectory": "GPX",
     "usersLoaded": 97,
