@@ -380,6 +380,24 @@ Si UptimeRobot no basta -> MIGRAR A VERCEL. Plan acordado:
 
 ---
 
+## Actualización de Calendario 19-10-2026
+Excel editado (24956 -> 25409) + 4 GPX/TCX nuevos (Los Leños ... cuesta zapata, base y "Capu").
+Rutas: 63 -> 65. Usuarios 97.
+- nuevas: Los Lenos - Pangue - Casa Blanca - Cuesta Zapata (24/10, reemplaza a Kross), dos
+  Mc Chamisero - Til Til - Cumbre La Dormida (31/10 y 05/01/27), Lo Prado - Cuesta Ibacache (14/01/27),
+  Lo Prado - Ibacache -Quintay (07/11)
+- FIX de matcher de archivos (getFileIndex): se agregó coincidencia EXACTA por nombre base (stem)
+  con preferencia de extensión, y el fallback difuso ahora prefiere el nombre MÁS CORTO.
+  Motivo: la ruta 24/10 agarraba por error "... cuesta zapata Capu.gpx" en vez del base.
+  Verificado: solo esa ruta cambió (ahora usa el base); cero regresión en las demás.
+- Waze/Google Maps se autogeneran del punto de inicio del GPX -> al resolver bien el GPX,
+  quedan correctos (24/10 ahora apunta a -33.4017,-71.1208).
+- ruta 07/11 "Lo Prado - Ibacache -Quintay": el usuario subió el GPX/TCX durante la sesión
+  ("Lo Prado - Ibacache -Quintay  ( Ristretto + Macchiato)", con doble espacio). Resuelto:
+  134.0 km, D+ 1587 m, 5:00:45, con maps/waze. GPX no encontrados: 0.
+- nota: el archivo "...Capu.gpx" queda en el repo pero hoy NO lo usa ninguna ruta (no hay
+  métricas por grupo). Es la variante Capuccino; quedaría para una eventual Fase 2.
+
 ## API pública del calendario (para consumir desde otro proyecto)
 - endpoint: GET /api/public/calendar  (server.js, dentro de handleApi)
 - auth: API key por header "x-api-key" o query ?key=; se lee de env var CALENDAR_API_KEY

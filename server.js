@@ -626,8 +626,16 @@ function getFileIndex(baseDir) {
   const files = fs.existsSync(baseDir) ? fs.readdirSync(baseDir) : [];
   const map = new Map();
   const looseMap = new Map();
+  // stem (nombre sin extensión) -> { ".gpx": path, ".tcx": path, ... }
+  // Permite una coincidencia EXACTA de nombre base y evita que un archivo con
+  // sufijo extra (p.ej. "... Capu.gpx") le gane por match difuso al archivo base.
+  const stemMap = new Map();
 
   const toLooseKey = (value) => normalizeKey(value).replace(/\(\d+\)(?=[a-z0-9]*$)/g, "");
+  const stemOf = (name) => {
+    const ext = path.extname(name).toLowerCase();
+    return normalizeKey(ext ? name.slice(0, name.length - ext.length) : name);
+  };
 
   for (const file of files) {
     const fullPath = path.join(baseDir, file);
@@ -638,21 +646,43 @@ function getFileIndex(baseDir) {
     if (looseKey && !looseMap.has(looseKey)) {
       looseMap.set(looseKey, fullPath);
     }
+    const stem = stemOf(file);
+    const ext = path.extname(file).toLowerCase();
+    if (!stemMap.has(stem)) stemMap.set(stem, new Map());
+    const byExt = stemMap.get(stem);
+    if (!byExt.has(ext)) byExt.set(ext, fullPath);
   }
+
+  const pickByExt = (byExt, queryExt) => {
+    if (queryExt && byExt.has(queryExt)) return byExt.get(queryExt);
+    for (const pref of [".gpx", ".tcx"]) {
+      if (byExt.has(pref)) return byExt.get(pref);
+    }
+    return byExt.values().next().value;
+  };
 
   return {
     resolve(fileName) {
       const normalized = normalizeKey(fileName);
       if (map.has(normalized)) return map.get(normalized);
 
+      // Coincidencia exacta del nombre base (sin extensión), con preferencia de extensión.
+      const queryExt = path.extname(fileName).toLowerCase();
+      const queryStem = stemOf(fileName);
+      if (stemMap.has(queryStem)) return pickByExt(stemMap.get(queryStem), queryExt);
+
       const looseNormalized = toLooseKey(fileName);
       if (looseMap.has(looseNormalized)) return looseMap.get(looseNormalized);
 
+      // Fallback difuso: entre los que calcen, prefiere el de nombre más corto
+      // (el más específico), para no agarrar variantes con texto extra.
+      let best = null;
       for (const [key, candidate] of map.entries()) {
         if (key.includes(normalized) || normalized.includes(key)) {
-          return candidate;
+          if (!best || key.length < best.key.length) best = { key, candidate };
         }
       }
+      if (best) return best.candidate;
 
       for (const [key, candidate] of looseMap.entries()) {
         if (key.includes(looseNormalized) || looseNormalized.includes(key)) {
