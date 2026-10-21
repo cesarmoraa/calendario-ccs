@@ -398,6 +398,22 @@ Rutas: 63 -> 65. Usuarios 97.
 - nota: el archivo "...Capu.gpx" queda en el repo pero hoy NO lo usa ninguna ruta (no hay
   métricas por grupo). Es la variante Capuccino; quedaría para una eventual Fase 2.
 
+## Alta de socios 21-10-2026 (hoja Usuarios)
+Se agregaron 4 socios activos (hoja "Usuarios", cols: A nº, B estado, C RUT, D NOMBRE, E APELLIDO):
+- Max Spiess 10.680.661-6 (PIN 0661), Rolando Libra 10.203.205-5 (3205),
+  Daniela Salgado 15.899.064-4 (9064), Mario Gutiérrez 13.642.444-0 (2444). Todos PIN único.
+- SE OMITIÓ "Alejandro Ihnen 7.773.422-8": YA EXISTÍA en la hoja. Reagregarlo habría creado
+  PIN duplicado (3422) y roto el login de ambos. (La fila vieja tenía nbsp alrededor del RUT.)
+- resultado: 97 -> 101 usuarios, 0 PIN duplicados, rutas intactas (65, GPX 0).
+
+### IMPORTANTE (gotcha de edición del Excel)
+NO editar el .xlsx con openpyxl y guardar: openpyxl reescribe las cadenas como inlineStr y
+ELIMINA xl/sharedStrings.xml. El parser del servidor (server.js) hace `unzip -p ... xl/sharedStrings.xml`
+y, si falta, lanza error y cae a la cache vieja (síntoma: cambios no aparecen, sigue el conteo viejo).
+Forma correcta usada: editar el XML quirúrgicamente con zipfile (agregar <si> a sharedStrings.xml
+y <row> a worksheets/sheet2.xml con t="s"), preservando sharedStrings y todo lo demás byte a byte.
+Script de referencia quedó en el scratchpad de esa sesión.
+
 ## API pública del calendario (para consumir desde otro proyecto)
 - endpoint: GET /api/public/calendar  (server.js, dentro de handleApi)
 - auth: API key por header "x-api-key" o query ?key=; se lee de env var CALENDAR_API_KEY

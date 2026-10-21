@@ -1,5 +1,5 @@
 {
-  "loadedAt": "19-10-2026, 7:57:32 p. m.",
+  "loadedAt": "21-10-2026, 5:51:33 p. m.",
   "routes": [
     {
       "id": "route-16",
@@ -32634,13 +32634,29 @@
     {
       "name": "Leonardo Lobato",
       "rut": "27.150.755-0"
+    },
+    {
+      "name": "Max Spiess",
+      "rut": "10.680.661-6"
+    },
+    {
+      "name": "Rolando Libra",
+      "rut": "10.203.205-5"
+    },
+    {
+      "name": "Daniela Salgado",
+      "rut": "15.899.064-4"
+    },
+    {
+      "name": "Mario Gutierrez",
+      "rut": "13.642.444-0"
     }
   ],
   "report": {
-    "generatedAt": "19-10-2026, 7:57:32 p. m.",
+    "generatedAt": "21-10-2026, 5:51:33 p. m.",
     "excelFile": "calendario.xlsx",
     "gpxDirectory": "GPX",
-    "usersLoaded": 97,
+    "usersLoaded": 101,
     "routesWithoutGpx": [
       "08/05/26 · Viaje Colchagua: Dia 1",
       "09/05/26 · Viaje Colchagua: Dia 2",
