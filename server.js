@@ -1515,12 +1515,19 @@ function icsFold(line) {
   return out;
 }
 function icsValid(v) { return v && !/por definir/i.test(String(v)); }
+// Strava R/M/C = los 3 grupos del club (Ristretto / Macchiato / Cappuccino).
+// Se agrupan los que comparten la misma ruta para no repetir el mismo link.
 function icsStravaLinks(r) {
-  const seen = {}, labels = { stravaR: "Ruta larga", stravaM: "Ruta media", stravaC: "Ruta corta" }, out = [];
-  for (const k of ["stravaR", "stravaM", "stravaC"]) {
+  const groups = [["stravaR", "Ristretto"], ["stravaM", "Macchiato"], ["stravaC", "Cappuccino"]];
+  const byUrl = new Map();
+  for (const [k, name] of groups) {
     const u = r[k];
-    if (icsValid(u) && !seen[u]) { seen[u] = 1; out.push(`${labels[k]}: ${u}`); }
+    if (!icsValid(u)) continue;
+    if (!byUrl.has(u)) byUrl.set(u, []);
+    byUrl.get(u).push(name);
   }
+  const out = [];
+  for (const [u, names] of byUrl) out.push(`${names.join(" · ")}: ${u}`);
   if (!out.length && icsValid(r.stravaUrl)) out.push(`Strava: ${r.stravaUrl}`);
   return out;
 }
@@ -1546,11 +1553,16 @@ function icsEvent(r, now) {
   if (icsValid(r.profile)) desc.push(`Perfil: ${r.profile}`);
   if (icsValid(r.type)) desc.push(`Tipo: ${r.type}${porDef ? " · estado " + r.status : ""}`);
   const strava = icsStravaLinks(r);
-  if (strava.length || icsValid(r.gpxFile) || icsValid(r.mapsUrl)) desc.push("");
-  for (const l of strava) desc.push(l);
+  if (strava.length) {
+    desc.push("");
+    desc.push("Strava por grupo:");
+    for (const l of strava) desc.push(l);
+  }
   if (icsValid(r.gpxFile)) desc.push(`GPX: ${r.gpxFile}`);
   if (icsValid(r.mapsUrl)) desc.push(`Mapa: ${r.mapsUrl}`);
   if (icsValid(r.wazeUrl)) desc.push(`Waze: ${r.wazeUrl}`);
+  desc.push("");
+  desc.push("⚠️ Calendario sujeto a cambios. Confirma en el grupo del club.");
 
   const L = [
     "BEGIN:VEVENT",
@@ -1613,7 +1625,8 @@ function buildCalendarICS(routes) {
   const head = [
     "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//CCS//Calendario Rutas//ES",
     "CALSCALE:GREGORIAN", "METHOD:PUBLISH", "X-WR-CALNAME:CicloClub Santiago",
-    "X-WR-TIMEZONE:America/Santiago", "X-WR-CALDESC:Salidas del Ciclo Club Santiago",
+    "X-WR-TIMEZONE:America/Santiago",
+    "X-WR-CALDESC:Salidas del Ciclo Club Santiago · Calendario sujeto a cambios",
     "REFRESH-INTERVAL;VALUE=DURATION:PT6H", "X-PUBLISHED-TTL:PT6H",
   ].map(icsFold);
   const body = upcoming.map((r) => icsEvent(r, now)).filter(Boolean);
