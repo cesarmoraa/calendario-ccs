@@ -16,6 +16,8 @@ const PORT = Number(process.env.PORT || 3000);
 // Llave para el endpoint público de solo-lectura /api/public/calendar.
 // Se define como variable de entorno (en Render y en local); nunca en el código.
 const PUBLIC_API_KEY = process.env.CALENDAR_API_KEY || "";
+// Secreto para firmar los tokens del feed .ics por socio (nunca en el código; repo público).
+const ICS_TOKEN_SECRET = process.env.ICS_TOKEN_SECRET || "";
 const ADMIN_CREDENTIALS = {
   username: "admin",
   password: "Lider0001$",
@@ -1566,6 +1568,35 @@ function icsEvent(r, now) {
   L.push("END:VEVENT");
   return L.map(icsFold).join("\r\n");
 }
+// --- Tokens por socio para el feed .ics ------------------------------------
+// Token = HMAC(SECRET, rutCanónico), opaco y estable. Se revoca sacando al
+// socio del Excel: si su RUT ya no está en state.users, su token deja de validar.
+function canonicalRut(rut) {
+  return String(rut || "").trim().toUpperCase().replace(/\./g, "").replace(/\s+/g, "");
+}
+function icsTokenFor(rut) {
+  if (!ICS_TOKEN_SECRET) return "";
+  return crypto.createHmac("sha256", ICS_TOKEN_SECRET)
+    .update(canonicalRut(rut)).digest("hex").slice(0, 20);
+}
+function validIcsRuts() {
+  const ruts = new Set();
+  for (const u of state.users || []) if (u.rut) ruts.add(canonicalRut(u.rut));
+  ruts.add(canonicalRut(ADMIN_CREDENTIALS.rut));
+  for (const v of VIEWER_CREDENTIALS) ruts.add(canonicalRut(v.rut));
+  return ruts;
+}
+function isValidIcsToken(token) {
+  if (!ICS_TOKEN_SECRET || !token) return false;
+  const tok = String(token).toLowerCase();
+  for (const rut of validIcsRuts()) {
+    const expected = icsTokenFor(rut);
+    if (expected.length === tok.length &&
+        crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(tok))) return true;
+  }
+  return false;
+}
+
 function buildCalendarICS(routes) {
   const now = new Date();
   const today0 = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
@@ -1588,18 +1619,55 @@ function buildCalendarICS(routes) {
 }
 
 async function handleApi(req, res, pathname) {
-  // Feed .ics público (sin API key): webcal suscribible por los socios.
+  // Feed .ics por socio: webcal suscribible, gateado por token personal.
+  // El token se obtiene tras login (GET /api/mi-suscripcion). Revocar = sacar del Excel.
   if (pathname === "/calendario.ics" || pathname === "/api/public/calendar.ics") {
-    const corsHeaders = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET, OPTIONS" };
+    const corsHeaders = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET, HEAD, OPTIONS" };
     if (req.method === "OPTIONS") { res.writeHead(204, corsHeaders); res.end(); return; }
-    if (req.method !== "GET") { sendJson(res, 405, { error: "Método no permitido" }, corsHeaders); return; }
+    if (req.method !== "GET" && req.method !== "HEAD") {
+      sendJson(res, 405, { error: "Método no permitido" }, corsHeaders);
+      return;
+    }
+    if (!ICS_TOKEN_SECRET) {
+      sendText(res, 503, "Suscripción no configurada (falta ICS_TOKEN_SECRET).\n", corsHeaders);
+      return;
+    }
+    const token = url.parse(req.url, true).query.token || "";
+    if (!isValidIcsToken(token)) {
+      sendText(res, 403,
+        "Suscripción no válida o revocada.\nEntra a calendario-ccs.onrender.com, inicia sesión y toca \"Suscribir mi calendario\".\n",
+        corsHeaders);
+      return;
+    }
     await ensureFreshData();
     const ics = buildCalendarICS(state.routes);
-    sendText(res, 200, ics, {
+    const headers = {
       ...corsHeaders,
       "Content-Type": "text/calendar; charset=utf-8",
       "Content-Disposition": 'inline; filename="cicloclub.ics"',
-      "Cache-Control": "public, max-age=1800",
+      "Cache-Control": "private, max-age=1800",
+    };
+    if (req.method === "HEAD") { res.writeHead(200, headers); res.end(); return; }
+    sendText(res, 200, ics, headers);
+    return;
+  }
+
+  // Link de suscripción personal del socio logueado (token embebido, opaco).
+  if (pathname === "/api/mi-suscripcion" && req.method === "GET") {
+    const session = getSession(req);
+    if (!session) { unauthorized(res); return; }
+    if (!ICS_TOKEN_SECRET) {
+      sendJson(res, 503, { error: "Suscripción aún no activada por el administrador." });
+      return;
+    }
+    const token = icsTokenFor(session.rut);
+    const host = req.headers.host || "calendario-ccs.onrender.com";
+    const https = `https://${host}/calendario.ics?token=${token}`;
+    sendJson(res, 200, {
+      name: session.name,
+      token,
+      https,
+      webcal: `webcal://${host}/calendario.ics?token=${token}`,
     });
     return;
   }

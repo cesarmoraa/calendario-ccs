@@ -26,6 +26,7 @@ const els = {
   viewTabs: Array.from(document.querySelectorAll('.view-tab')),
   refresh: document.getElementById('refresh-btn'),
   logout: document.getElementById('logout-btn'),
+  subscribe: document.getElementById('subscribe-btn'),
   month: document.getElementById('filter-month'),
   start: document.getElementById('filter-start'),
   profile: document.getElementById('filter-profile'),
@@ -536,6 +537,69 @@ function buildRefreshNotice(publish) {
   return 'Calendario actualizado localmente.';
 }
 
+function closeSubscribeModal() {
+  const ov = document.getElementById('sub-overlay');
+  if (ov) ov.remove();
+}
+
+function showSubscribeModal(data) {
+  closeSubscribeModal();
+  const isApple = /iphone|ipad|ipod|mac/i.test(navigator.userAgent);
+  const overlay = document.createElement('div');
+  overlay.id = 'sub-overlay';
+  overlay.className = 'sub-overlay';
+  overlay.innerHTML = `
+    <div class="sub-modal" role="dialog" aria-modal="true" aria-label="Suscribir mi calendario">
+      <button class="sub-close" aria-label="Cerrar">&times;</button>
+      <h2>📅 Suscribir mi calendario</h2>
+      <p class="sub-lead">Agrega las salidas del club a tu teléfono. Se actualizan solas: cuando cambia el calendario, cambia en tu app.</p>
+      <a class="sub-primary" href="${data.webcal}">Agregar a mi calendario</a>
+      <p class="sub-hint">${isApple
+        ? 'En iPhone/Mac se abrirá la ventana de "Suscripción a calendario". Toca Suscribirse.'
+        : 'Si usas iPhone o Mac, el botón abre la suscripción directo.'}</p>
+      <div class="sub-divider"><span>o para Google Calendar</span></div>
+      <p class="sub-hint">Copia este link y pégalo en Google Calendar → <em>Otros calendarios → Desde una URL</em>:</p>
+      <div class="sub-copy">
+        <input id="sub-url" type="text" readonly value="${data.https}">
+        <button id="sub-copy-btn" class="secondary-btn">Copiar</button>
+      </div>
+      <p class="sub-foot">Tu link es personal. Si dejas de ser socio, se desactiva.</p>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeSubscribeModal(); });
+  overlay.querySelector('.sub-close').addEventListener('click', closeSubscribeModal);
+  const copyBtn = overlay.querySelector('#sub-copy-btn');
+  copyBtn.addEventListener('click', async () => {
+    const input = overlay.querySelector('#sub-url');
+    try {
+      await navigator.clipboard.writeText(input.value);
+    } catch (_) {
+      input.select();
+      document.execCommand('copy');
+    }
+    copyBtn.textContent = '¡Copiado!';
+    setTimeout(() => { copyBtn.textContent = 'Copiar'; }, 1800);
+  });
+}
+
+async function openSubscribe() {
+  els.subscribe.disabled = true;
+  try {
+    const res = await fetch('/api/mi-suscripcion', { credentials: 'same-origin' });
+    if (res.status === 401) { window.location.href = '/login.html'; return; }
+    const data = await res.json();
+    if (!res.ok) {
+      alert(data.error || 'No fue posible generar tu suscripción.');
+      return;
+    }
+    showSubscribeModal(data);
+  } catch (error) {
+    alert('No fue posible conectar con el servidor.');
+  } finally {
+    els.subscribe.disabled = false;
+  }
+}
+
 async function logout() {
   await fetch('/api/logout', {
     method: 'POST',
@@ -554,6 +618,8 @@ Object.values({
 els.search.addEventListener('input', applyFilters);
 els.refresh.addEventListener('click', refreshCalendar);
 els.logout.addEventListener('click', logout);
+if (els.subscribe) els.subscribe.addEventListener('click', openSubscribe);
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSubscribeModal(); });
 els.viewTabs.forEach((tab) => tab.addEventListener('click', () => setView(tab.dataset.view)));
 
 (async function init() {

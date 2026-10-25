@@ -1094,3 +1094,39 @@ body.stages-active .mobile-cards {
     align-items: center;
   }
 }
+
+/* ---- Modal "Suscribir mi calendario" ---- */
+.sub-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(2, 10, 22, 0.72); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.sub-modal {
+  position: relative; width: 100%; max-width: 440px;
+  background: linear-gradient(180deg, #0d2342, #061931);
+  border: 1px solid var(--border-strong); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 26px 24px 20px; color: var(--text);
+}
+.sub-modal h2 { margin: 0 0 8px; font-size: 1.35rem; }
+.sub-lead { margin: 0 0 18px; color: var(--muted); font-size: 0.95rem; line-height: 1.45; }
+.sub-close {
+  position: absolute; top: 12px; right: 14px; background: none; border: none;
+  color: var(--muted); font-size: 1.7rem; line-height: 1; cursor: pointer; padding: 4px;
+}
+.sub-close:hover { color: var(--text); }
+.sub-primary {
+  display: block; text-align: center; text-decoration: none;
+  background: var(--accent); color: #04152c; font-weight: 700; font-size: 1.05rem;
+  padding: 14px 18px; border-radius: 12px; margin: 0 0 8px;
+  box-shadow: 0 10px 24px rgba(0, 160, 223, 0.35);
+}
+.sub-primary:hover { filter: brightness(1.08); }
+.sub-hint { margin: 6px 0 10px; color: var(--muted); font-size: 0.82rem; line-height: 1.4; }
+.sub-divider { display: flex; align-items: center; gap: 12px; margin: 18px 0 12px; color: rgba(181,199,217,0.55); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.sub-divider::before, .sub-divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+.sub-copy { display: flex; gap: 8px; }
+.sub-copy input {
+  flex: 1; min-width: 0; background: rgba(2, 16, 32, 0.72); color: var(--text);
+  border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; font-size: 0.82rem;
+}
+.sub-foot { margin: 16px 0 0; color: rgba(181,199,217,0.6); font-size: 0.76rem; text-align: center; }
