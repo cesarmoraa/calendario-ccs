@@ -1469,8 +1469,10 @@ function requireAdminSession(req, res) {
 // Lee state.routes (ya procesadas desde el Excel); nunca expone usuarios.
 // ---------------------------------------------------------------------------
 const ICS_DOMAIN = "cicloclub.cl";
-const ICS_START_HOUR = 8;   // hora de salida por defecto (local Santiago)
+const ICS_START_HOUR = 8;   // hora de salida (local Santiago); invierno crudo 8:30, se deja 8:00 estándar
 const ICS_START_MIN = 0;
+const ICS_END_HOUR = 14;    // término fijo 14:00 (promedio; si terminan antes, no importa)
+const ICS_END_MIN = 0;
 const ICS_TYPE_EMOJI = { Tradicional: "🚴", Paseo: "🌄", Alternativa: "🔁" };
 
 function icsFirstSaturday(year, month) {
@@ -1527,7 +1529,7 @@ function icsEvent(r, now) {
   const [dd, mm, yy] = r.date.split("/").map(Number);
   const year = 2000 + yy;
   const start = icsToUTC(year, mm, dd, ICS_START_HOUR, ICS_START_MIN);
-  const end = new Date(start.getTime() + ((icsDurMin(r.timeText) || 240) + 45) * 60000);
+  const end = icsToUTC(year, mm, dd, ICS_END_HOUR, ICS_END_MIN);
   const sinPunto = !icsValid(r.start);
   const emoji = ICS_TYPE_EMOJI[r.type] || "🚴";
   const porDef = r.statusKey === "confirmada" ? "" : " (por confirmar)";
