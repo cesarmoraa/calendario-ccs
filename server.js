@@ -1461,7 +1461,149 @@ function requireAdminSession(req, res) {
   return session;
 }
 
+// ---------------------------------------------------------------------------
+// Calendario iCal (.ics) suscribible — modelo F1.
+// Feed PÚBLICO (sin API key): un webcal al que los socios se suscriben una vez.
+// Lee state.routes (ya procesadas desde el Excel); nunca expone usuarios.
+// ---------------------------------------------------------------------------
+const ICS_DOMAIN = "cicloclub.cl";
+const ICS_START_HOUR = 8;   // hora de salida por defecto (local Santiago)
+const ICS_START_MIN = 0;
+const ICS_TYPE_EMOJI = { Tradicional: "🚴", Paseo: "🌄", Alternativa: "🔁" };
+
+function icsFirstSaturday(year, month) {
+  const d = new Date(Date.UTC(year, month - 1, 1));
+  return new Date(Date.UTC(year, month - 1, 1 + ((6 - d.getUTCDay() + 7) % 7)));
+}
+// Chile RM: verano UTC-3 (1er sáb sept → 1er sáb abril), estándar UTC-4 resto.
+function icsClOffset(year, mon, day) {
+  const t = Date.UTC(year, mon - 1, day);
+  const inDST = t >= icsFirstSaturday(year, 9).getTime() || t < icsFirstSaturday(year, 4).getTime();
+  return inDST ? 3 : 4;
+}
+function icsPad(n) { return String(n).padStart(2, "0"); }
+function icsToUTC(year, mon, day, h, m) {
+  return new Date(Date.UTC(year, mon - 1, day, h + icsClOffset(year, mon, day), m, 0));
+}
+function icsStamp(dt) {
+  return dt.getUTCFullYear() + icsPad(dt.getUTCMonth() + 1) + icsPad(dt.getUTCDate())
+    + "T" + icsPad(dt.getUTCHours()) + icsPad(dt.getUTCMinutes()) + icsPad(dt.getUTCSeconds()) + "Z";
+}
+function icsDurMin(t) {
+  if (!t || /por definir/i.test(t)) return 0;
+  const p = String(t).split(":").map(Number);
+  if (p.length === 3) return p[0] * 60 + p[1] + Math.round(p[2] / 60);
+  if (p.length === 2) return p[0] * 60 + p[1];
+  return 0;
+}
+function icsEsc(s) {
+  return String(s == null ? "" : s)
+    .replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
+}
+function icsFold(line) {
+  if (Buffer.byteLength(line, "utf8") <= 75) return line;
+  let out = "", cur = 0, first = true;
+  for (const ch of line) {
+    const w = Buffer.byteLength(ch, "utf8");
+    if (cur + w > (first ? 75 : 74)) { out += "\r\n "; cur = 1; first = false; }
+    out += ch; cur += w;
+  }
+  return out;
+}
+function icsValid(v) { return v && !/por definir/i.test(String(v)); }
+function icsStravaLinks(r) {
+  const seen = {}, labels = { stravaR: "Ruta larga", stravaM: "Ruta media", stravaC: "Ruta corta" }, out = [];
+  for (const k of ["stravaR", "stravaM", "stravaC"]) {
+    const u = r[k];
+    if (icsValid(u) && !seen[u]) { seen[u] = 1; out.push(`${labels[k]}: ${u}`); }
+  }
+  if (!out.length && icsValid(r.stravaUrl)) out.push(`Strava: ${r.stravaUrl}`);
+  return out;
+}
+function icsEvent(r, now) {
+  if (!r.date) return "";
+  const [dd, mm, yy] = r.date.split("/").map(Number);
+  const year = 2000 + yy;
+  const start = icsToUTC(year, mm, dd, ICS_START_HOUR, ICS_START_MIN);
+  const end = new Date(start.getTime() + ((icsDurMin(r.timeText) || 240) + 45) * 60000);
+  const sinPunto = !icsValid(r.start);
+  const emoji = ICS_TYPE_EMOJI[r.type] || "🚴";
+  const porDef = r.statusKey === "confirmada" ? "" : " (por confirmar)";
+  const km = icsValid(r.distanceText) ? r.distanceText.replace(/\.0 /, " ") : "";
+  const summary = sinPunto
+    ? "📝 CCS · Salida por confirmar"
+    : `${emoji} CCS · ${r.start}${km ? " · " + km : ""}${porDef}`;
+
+  const desc = [];
+  if (icsValid(r.route)) desc.push(`Ruta: ${r.route}`);
+  if (icsValid(r.start)) desc.push(`Punto de encuentro: ${r.start}`);
+  if (icsValid(r.distanceText)) desc.push(`Distancia: ${r.distanceText}`);
+  if (icsValid(r.elevationText)) desc.push(`Desnivel: ${r.elevationText}`);
+  if (icsValid(r.profile)) desc.push(`Perfil: ${r.profile}`);
+  if (icsValid(r.type)) desc.push(`Tipo: ${r.type}${porDef ? " · estado " + r.status : ""}`);
+  const strava = icsStravaLinks(r);
+  if (strava.length || icsValid(r.gpxFile) || icsValid(r.mapsUrl)) desc.push("");
+  for (const l of strava) desc.push(l);
+  if (icsValid(r.gpxFile)) desc.push(`GPX: ${r.gpxFile}`);
+  if (icsValid(r.mapsUrl)) desc.push(`Mapa: ${r.mapsUrl}`);
+  if (icsValid(r.wazeUrl)) desc.push(`Waze: ${r.wazeUrl}`);
+
+  const L = [
+    "BEGIN:VEVENT",
+    `UID:${r.id}@${ICS_DOMAIN}`,
+    `DTSTAMP:${icsStamp(now)}`,
+    `DTSTART:${icsStamp(start)}`,
+    `DTEND:${icsStamp(end)}`,
+    `SUMMARY:${icsEsc(summary)}`,
+    `DESCRIPTION:${icsEsc(desc.join("\n"))}`,
+  ];
+  if (icsValid(r.start)) L.push(`LOCATION:${icsEsc(r.start)}`);
+  if (r.latitude && r.longitude) L.push(`GEO:${r.latitude};${r.longitude}`);
+  if (icsValid(r.stravaUrl)) L.push(`URL:${r.stravaUrl}`);
+  L.push(r.statusKey === "confirmada" ? "STATUS:CONFIRMED" : "STATUS:TENTATIVE");
+  L.push("TRANSP:OPAQUE");
+  L.push("BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:Salida CCS mañana 🚴", "TRIGGER:-PT14H", "END:VALARM");
+  L.push("END:VEVENT");
+  return L.map(icsFold).join("\r\n");
+}
+function buildCalendarICS(routes) {
+  const now = new Date();
+  const today0 = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  const upcoming = (routes || []).filter((r) => {
+    if (!r.date) return false;
+    const [dd, mm, yy] = r.date.split("/").map(Number);
+    return Date.UTC(2000 + yy, mm - 1, dd) >= today0 - 2 * 864e5; // desde antier en adelante
+  }).sort((a, b) => {
+    const pa = a.date.split("/").map(Number), pb = b.date.split("/").map(Number);
+    return (2000 + pa[2]) * 1e4 + pa[1] * 100 + pa[0] - ((2000 + pb[2]) * 1e4 + pb[1] * 100 + pb[0]);
+  });
+  const head = [
+    "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//CCS//Calendario Rutas//ES",
+    "CALSCALE:GREGORIAN", "METHOD:PUBLISH", "X-WR-CALNAME:CicloClub Santiago",
+    "X-WR-TIMEZONE:America/Santiago", "X-WR-CALDESC:Salidas del Ciclo Club Santiago",
+    "REFRESH-INTERVAL;VALUE=DURATION:PT6H", "X-PUBLISHED-TTL:PT6H",
+  ].map(icsFold);
+  const body = upcoming.map((r) => icsEvent(r, now)).filter(Boolean);
+  return head.join("\r\n") + "\r\n" + body.join("\r\n") + "\r\nEND:VCALENDAR\r\n";
+}
+
 async function handleApi(req, res, pathname) {
+  // Feed .ics público (sin API key): webcal suscribible por los socios.
+  if (pathname === "/calendario.ics" || pathname === "/api/public/calendar.ics") {
+    const corsHeaders = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET, OPTIONS" };
+    if (req.method === "OPTIONS") { res.writeHead(204, corsHeaders); res.end(); return; }
+    if (req.method !== "GET") { sendJson(res, 405, { error: "Método no permitido" }, corsHeaders); return; }
+    await ensureFreshData();
+    const ics = buildCalendarICS(state.routes);
+    sendText(res, 200, ics, {
+      ...corsHeaders,
+      "Content-Type": "text/calendar; charset=utf-8",
+      "Content-Disposition": 'inline; filename="cicloclub.ics"',
+      "Cache-Control": "public, max-age=1800",
+    });
+    return;
+  }
+
   // Endpoint público de solo-lectura para consumir el calendario desde otro proyecto.
   // Protegido con API key (header "x-api-key" o query ?key=). Devuelve solo rutas,
   // nunca usuarios ni datos personales. CORS abierto porque el contenido no es sensible.
@@ -1636,7 +1778,7 @@ function createServer() {
     const parsedUrl = url.parse(req.url, true);
     const pathname = parsedUrl.pathname || "/";
     try {
-      if (pathname.startsWith("/api/")) {
+      if (pathname.startsWith("/api/") || pathname === "/calendario.ics") {
         await handleApi(req, res, pathname);
         return;
       }
