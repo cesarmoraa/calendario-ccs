@@ -582,22 +582,31 @@ function showSubscribeModal(data) {
   });
 }
 
-async function openSubscribe() {
+async function openSubscribe(auto = false) {
   els.subscribe.disabled = true;
   try {
     const res = await fetch('/api/mi-suscripcion', { credentials: 'same-origin' });
-    if (res.status === 401) { window.location.href = '/login.html'; return; }
+    if (res.status === 401) { if (!auto) window.location.href = '/login.html'; return; }
     const data = await res.json();
     if (!res.ok) {
-      alert(data.error || 'No fue posible generar tu suscripción.');
+      if (!auto) alert(data.error || 'No fue posible generar tu suscripción.');
       return;
     }
     showSubscribeModal(data);
   } catch (error) {
-    alert('No fue posible conectar con el servidor.');
+    if (!auto) alert('No fue posible conectar con el servidor.');
   } finally {
     els.subscribe.disabled = false;
   }
+}
+
+// Primera vez que el socio entra: muestra el emergente solo una vez (recuerda en localStorage).
+function maybeAutoPromptSubscribe() {
+  let seen = false;
+  try { seen = localStorage.getItem('ccs_sub_prompted') === '1'; } catch (_) {}
+  if (seen) return;
+  try { localStorage.setItem('ccs_sub_prompted', '1'); } catch (_) {}
+  setTimeout(() => openSubscribe(true), 700);
 }
 
 async function logout() {
@@ -625,4 +634,5 @@ els.viewTabs.forEach((tab) => tab.addEventListener('click', () => setView(tab.da
 (async function init() {
   await fetchSession();
   await fetchCalendar();
+  maybeAutoPromptSubscribe();
 })();
