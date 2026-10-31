@@ -364,7 +364,49 @@ Intentos:
    - PENDIENTE la prueba real del usuario: no visitar por ~30 min y comprobar que abre instantáneo
    - por qué funciona: Render duerme a los 15 min de silencio; un ping cada 5 min nunca lo permite
 
-Si UptimeRobot no basta -> MIGRAR A VERCEL. Plan acordado:
+## Suspensión por 750h free de Render (31-10-2026)
+- Render suspendió los servicios free del workspace: el workspace usó las 750 horas/mes.
+  Suspendidos: Nucleo CCS, calendario-ccs, dashboard-reciclean, portal-vecinal-api (4 servicios
+  comparten la bolsa de 750h).
+- CAUSA: el keep-alive (UptimeRobot cada 5 min) mantuvo calendario-ccs despierto 24/7 (~730h),
+  comiéndose casi toda la bolsa COMPARTIDA y arrastrando a los otros 3 a la suspensión.
+- Render reactiva todo automáticamente el 1-nov (reset mensual de free usage), sin hacer nada.
+- DECISIÓN del usuario (31-10): ESPERAR al reset del 1-nov y MANTENER Render. No migrar por ahora.
+  - keep-alive de GitHub Actions: se MANTIENE (el usuario pidió dejarlo; se evalúa después).
+    (Nota: ese workflow igual no disparaba solo; el que de verdad consumía era UptimeRobot.)
+  - pendiente para "mañana": decidir cómo evitar que se repita el mes que viene. Opciones:
+    (a) apagar/bajar el keep-alive (UptimeRobot) y aceptar cold-starts -> no agota las 750h;
+    (b) subir calendario-ccs a Starter ~US$7/mes (siempre arriba, fuera de la bolsa free);
+    (c) migrar a Vercel; (d) auto-hospedar en Citadel (ver abajo).
+- Lección: con VARIOS servicios free en un workspace, NO usar keep-alive 24/7 (bolsa de 750h
+  COMPARTIDA). Mantener uno despierto se come la bolsa y suspende a todos.
+
+## Alternativas de hosting evaluadas (31-10-2026)
+- VERCEL: gratis, sin límite de horas, siempre instantáneo (CDN). Pero requiere re-arquitectura:
+  datos del Excel/GPX procesados en el BUILD (JSON estático), login con cookie firmada en vez de
+  sesión en memoria, log de accesos a store externo (o se descarta), API como función serverless.
+  Varias horas de trabajo; lo delicado es el login. El usuario dijo que la migración la haría yo.
+- CITADEL: es el Mac del usuario como servidor propio (~/Citadel, scripts modo-servidor.sh /
+  modo-normal.sh; corre Docker con n8n/open-webui y Ollama). El calendario PODRÍA correr ahí
+  (contenedor o pm2): gratis, sin cold-start, datos privados. Contras: el Mac debe estar
+  encendido/enchufado/despierto 24/7; hay que exponerlo con un túnel (ej. Cloudflare Tunnel);
+  la disponibilidad depende de su luz/internet de casa. Pendiente confirmar si ya expone algo
+  con túnel/dominio. Bueno para herramientas internas; para todo el club pesa la confiabilidad.
+
+## IMPORTANTE: desarrollo en paralelo en el repo (detectado 31-10-2026)
+- Al intentar pushear, el remoto tenía 3 commits que yo (Claude) no tenía, hechos por otra
+  persona/herramienta (estilo conventional commits "feat:"/"fix:", distinto al mío):
+  - 2f92949 feat: Strava por grupo (Ristretto/Macchiato/Cappuccino) + aviso 'calendario sujeto a cambios'
+  - 1f530f1 fix: horario de salidas 08:00-14:00 fijo
+  - e5f34ac feat: auto-mostrar el emergente de suscripción la primera vez (localStorage)
+- Tocaron server.js (+227 líneas), public/app.js, public/index.html, public/styles.css.
+  NO tocaron RETOMAR_ANALISIS.md, el Excel ni data/.
+- Reimplementaron "Strava por grupo" (que ya existía de mi trabajo), probablemente distinto.
+- ACCIÓN: me sincronicé a origin/main (fast-forward a 2f92949) para quedar al día.
+- REGLA a futuro: antes de tocar/publicar código, SIEMPRE `git fetch` + revisar origin/main y
+  coordinar con quien esté desarrollando, para no sobrescribir su trabajo. Pendiente aclarar quién es.
+
+Si se decide dejar cold-start atrás -> MIGRAR A VERCEL. Plan acordado:
 - **Datos**: mover el parseo de Excel + GPX/TCX al **build** (script que emite JSON estático).
   Elimina el trabajo en runtime y la escritura de `data/rutas_procesadas.json`.
 - **Frontend**: `public/` servido estático desde CDN (esto es lo que da la sensación instantánea).
