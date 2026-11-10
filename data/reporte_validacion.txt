@@ -1,9 +1,9 @@
 Reporte de validación CCS 2026
-Generado: 21-10-2026, 5:51:33 p. m.
+Generado: 10-11-2026, 8:17:09 p. m.
 
 Excel fuente: calendario.xlsx
 Carpeta GPX: GPX
-Usuarios cargados: 101
+Usuarios cargados: 102
 
 Rutas sin GPX: 11
 - 08/05/26 · Viaje Colchagua: Dia 1

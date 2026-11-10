@@ -440,6 +440,23 @@ Rutas: 63 -> 65. Usuarios 97.
 - nota: el archivo "...Capu.gpx" queda en el repo pero hoy NO lo usa ninguna ruta (no hay
   métricas por grupo). Es la variante Capuccino; quedaría para una eventual Fase 2.
 
+## Actualización Calendario + Usuarios 10-11-2026
+Excel editado (21808 -> 26039), sin GPX nuevos. Rutas 65 -> 67, usuarios 101 -> 102.
+- rutas: reorganización + extensión a enero 2027 (6 nuevas con GPX, 4 reemplazadas/movidas).
+  Ej.: 14/11 "Coda - Las Dichas - Tunquen" -> "Taberna La Brava - Las Dichas - Tunquen";
+  nuevas 12/01/27, 19/01/27, 26/01/27. Sin cambios de métricas en las que siguen.
+- socio nuevo: Alfredo Irarrazaval 6.379.765-0 (PIN 9765), único, sin colisión.
+- validación: GPX no encontrados 0, 0 filas ignoradas, 0 PIN duplicados.
+- FIX ruta 14/11 "Taberna La Brava - Las Dichas - Tunquen": el usuario renombró la ruta y subió un
+  GPX nuevo ("Taberna La Breva - Las Dichas - Tunquén.gpx"), pero la celda "Archivo GPX" (H55) seguía
+  apuntando al viejo "Coda - Las Dichas - Tunquén.gpx". Se corrigió H55 por edición quirúrgica del XML
+  (cambiar el índice de sharedString de la celda) -> ahora usa el archivo correcto (110.6 km, D+ 1905,
+  4:08:36). El archivo "Coda ... Tunquén.gpx" quedó huérfano (ninguna ruta lo usa; se dejó por si acaso).
+  OJO grafía: la ruta dice "Brava" (A) y el archivo "Breva" (E) -> no afecta el matching (manda la celda).
+- NOTA: regenerado con el server.js del otro dev (ya sincronizado a origin/main 1aeb294 antes de tocar).
+  Las ediciones del Excel del usuario fueron en Excel/Numbers (no openpyxl), así que mantienen
+  sharedStrings. La corrección de H55 también se hizo preservando ese formato (zipfile + XML).
+
 ## Alta de socios 21-10-2026 (hoja Usuarios)
 Se agregaron 4 socios activos (hoja "Usuarios", cols: A nº, B estado, C RUT, D NOMBRE, E APELLIDO):
 - Max Spiess 10.680.661-6 (PIN 0661), Rolando Libra 10.203.205-5 (3205),
